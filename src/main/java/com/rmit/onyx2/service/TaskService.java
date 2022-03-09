@@ -42,4 +42,8 @@ public class TaskService {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    public void deleteTaskById(Long taskId) {
+        taskRepository.deleteById(taskId);
+    }
 }

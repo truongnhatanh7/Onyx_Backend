@@ -29,4 +29,8 @@ public class TaskController {
         return taskService.addTaskByListId(listId, task);
     }
 
+    @DeleteMapping("/{listId}")
+    public void deleteTaskByListId(@PathVariable(name = "listId") Long listId) {
+        taskService.deleteTaskById(listId);
+    }
 }
