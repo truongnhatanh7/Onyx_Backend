@@ -42,4 +42,8 @@ public class WorkspaceListService {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    public void deleteWorkSpaceListById(long listID) {
+        workspaceRepository.deleteById(listID);
+    }
 }

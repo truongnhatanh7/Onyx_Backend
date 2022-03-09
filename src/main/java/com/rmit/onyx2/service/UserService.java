@@ -51,4 +51,8 @@ public class UserService {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    public void deleteUserById(long userId) {
+        userRepository.deleteById(userId);
+    }
 }

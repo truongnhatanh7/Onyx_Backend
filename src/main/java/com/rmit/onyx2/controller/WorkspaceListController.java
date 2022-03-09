@@ -31,4 +31,9 @@ public class WorkspaceListController {
         return workspaceListService.addWorkspaceListByWorkspaceId(workspaceId, workspaceList);
     }
 
+    @DeleteMapping("/{listID}")
+    public void deleteWorkSpaceListById(@PathVariable(name="listId") long listId) {
+        workspaceListService.deleteWorkSpaceListById(listId);
+    }
+
 }

@@ -31,4 +31,8 @@ public class WorkspaceService {
     public void addWorkspace(Workspace workspace) {
         workspaceRepository.saveAndFlush(workspace);
     }
+
+    public void deleteWorkSpaceById(long workspaceId) {
+        workspaceRepository.deleteById(workspaceId);
+    }
 }

@@ -29,4 +29,9 @@ public class WorkspaceController {
     public void addWorkspace(@RequestBody Workspace workspace) {
         workspaceService.addWorkspace(workspace);
     }
+
+    @DeleteMapping("/{workspaceID}")
+    public void deletWorkSpaceById(@PathVariable(name="workspaceId") long workspaceId) {
+        workspaceService.deleteWorkSpaceById(workspaceId);
+    }
 }
