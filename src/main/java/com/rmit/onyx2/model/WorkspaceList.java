@@ -22,7 +22,7 @@ public class WorkspaceList {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL , fetch = FetchType.EAGER)
     @JoinColumn(name = "workspace_id", referencedColumnName = "workspace_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

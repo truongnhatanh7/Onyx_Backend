@@ -1,6 +1,5 @@
 package com.rmit.onyx2.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -25,15 +24,28 @@ public class Workspace {
     @Column(name = "workspace_title")
     private String workspaceTitle;
 
-    @ManyToMany(mappedBy = "workspaces", cascade = {CascadeType.ALL} , fetch = FetchType.LAZY)
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH},fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "users_workspaces",
+            joinColumns =
+                    @JoinColumn(name = "workspace_id")
+            ,
+            inverseJoinColumns =
+                    @JoinColumn(name = "user_id")
+            )
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<User> users = new HashSet<>();
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "workspace", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonManagedReference
     private List<WorkspaceList> workspaceLists = new ArrayList<>();
 
+    public void removeUser(User user) {
+        users.remove(user);
+        user.getWorkspaces().remove(this);
+    }
 }

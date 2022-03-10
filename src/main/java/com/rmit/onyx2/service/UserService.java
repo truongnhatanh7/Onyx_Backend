@@ -52,7 +52,20 @@ public class UserService {
         return ResponseEntity.badRequest().build();
     }
 
-    public void deleteUserById(long userId) {
-        userRepository.deleteById(userId);
+    public ResponseEntity<User> deleteUserById(long userId){
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isPresent()) {
+            User tmpUser = user.get();
+//            //Loop through user list of work spaces to remove user
+//            for (Workspace workspace : tmpUser.getWorkspaces()) {
+//                if (workspace.getUsers().contains(tmpUser)) {
+//                    workspace.removeUser(tmpUser);
+//                }
+//            }
+//            userRepository.save(tmpUser);
+            userRepository.delete(tmpUser);
+            return ResponseEntity.ok().build();
+        }
+       return ResponseEntity.badRequest().build();
     }
 }

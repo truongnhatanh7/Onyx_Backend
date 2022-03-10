@@ -32,17 +32,15 @@ public class User {
     private String password;
 
 
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinTable(
         name = "users_workspaces",
-        joinColumns = {
+        joinColumns =
                 @JoinColumn(name = "user_id")
-        },
-        inverseJoinColumns = {
+        ,
+        inverseJoinColumns =
                 @JoinColumn(name = "workspace_id")
-        }
     )
-
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Workspace> workspaces = new HashSet<>();
@@ -52,4 +50,8 @@ public class User {
         workspace.getUsers().add(this);
     }
 
+    public void removeWorkSpace(Workspace workspace) {
+        workspaces.remove(workspace);
+        workspace.getUsers().remove(this);
+    }
 }

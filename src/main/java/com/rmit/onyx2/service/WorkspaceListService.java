@@ -43,7 +43,17 @@ public class WorkspaceListService {
         return ResponseEntity.badRequest().build();
     }
 
-    public void deleteWorkSpaceListById(long listID) {
-        workspaceRepository.deleteById(listID);
+    public ResponseEntity<WorkspaceList>deleteWorkSpaceListById(long listID, long workspaceId) {
+       List<WorkspaceList> workspaceList = getWorkspaceListByWorkspaceId(workspaceId);
+       Workspace workspace = workspaceRepository.getById(workspaceId);
+       if(workspaceList != null) {
+           if(workspaceList.size() > listID && listID >0) {
+               workspaceList.remove(listID);
+               workspace.setWorkspaceLists(workspaceList);
+               workspaceRepository.save(workspace);
+               return ResponseEntity.ok().build();
+           }
+       }
+        return ResponseEntity.badRequest().build();
     }
 }

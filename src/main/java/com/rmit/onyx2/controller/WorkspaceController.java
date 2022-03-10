@@ -5,6 +5,7 @@ import com.rmit.onyx2.model.WorkspaceDTO;
 import com.rmit.onyx2.service.WorkspaceService;
 import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public class WorkspaceController {
         workspaceService.addWorkspace(workspace);
     }
 
-    @DeleteMapping("/{workspaceID}")
-    public void deletWorkSpaceById(@PathVariable(name="workspaceId") long workspaceId) {
-        workspaceService.deleteWorkSpaceById(workspaceId);
+    @DeleteMapping("/{workspaceId}")
+    public ResponseEntity<Workspace> deleteWorkSpaceById(@PathVariable(name="workspaceId") long workspaceId) {
+       return workspaceService.deletWorkspaceById(workspaceId);
     }
 }

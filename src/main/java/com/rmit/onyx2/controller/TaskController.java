@@ -29,9 +29,9 @@ public class TaskController {
         return taskService.addTaskByListId(listId, task);
     }
 
-    @DeleteMapping("/{taskId}")
-    public void deleteTaskById(@PathVariable(name = "taskId") Long taskId) {
+    @DeleteMapping("/{workspaceId}/{task_id}")
+    public void deleteTaskById(@PathVariable(name = "taskId") Long taskId, @PathVariable(name = "workspaceId") Long workspaceId) {
         //TODO: Exception handling
-        taskService.deleteTaskById(taskId);
+        taskService.deleteTaskById(workspaceId,taskId);
     }
 }

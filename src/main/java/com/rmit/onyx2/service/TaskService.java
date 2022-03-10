@@ -43,7 +43,13 @@ public class TaskService {
         return ResponseEntity.badRequest().build();
     }
 
-    public void deleteTaskById(Long taskId) {
-        taskRepository.deleteById(taskId);
+    public ResponseEntity<Task> deleteTaskById(Long taskId, Long listId) {
+        //Find the list id
+        Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
+        if(list.isPresent()) {
+            list.get().getTasks().remove(taskId);
+            return ResponseEntity.ok().build();
+        }
+       return ResponseEntity.badRequest().build();
     }
 }
