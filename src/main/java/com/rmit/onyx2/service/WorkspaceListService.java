@@ -24,7 +24,7 @@ public class WorkspaceListService {
         this.workspaceRepository = workspaceRepository;
     }
 
-    public List<WorkspaceList> getWorkspaceListByWorkspaceId(Long id) {
+    public Set<WorkspaceList> getWorkspaceListByWorkspaceId(Long id) {
         Optional<Workspace> workspace = workspaceRepository.findById(id);
         if (workspace.isPresent()) {
             return workspace.get().getWorkspaceLists();
