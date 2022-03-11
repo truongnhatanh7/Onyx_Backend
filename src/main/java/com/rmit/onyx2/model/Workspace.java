@@ -37,6 +37,6 @@ public class Workspace {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonManagedReference
-    private List<WorkspaceList> workspaceLists = new ArrayList<>();
+    private Set<WorkspaceList> workspaceLists = new HashSet<>();
 
 }

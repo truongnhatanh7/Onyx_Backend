@@ -22,16 +22,19 @@ public class WorkspaceListController {
     }
 
     @GetMapping("/{workspaceId}")
-    public List<WorkspaceList> getWorkspaceListByWorkspaceId(@PathVariable(name = "workspaceId") Long workspaceId) {
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    public Set<WorkspaceList> getWorkspaceListByWorkspaceId(@PathVariable(name = "workspaceId") Long workspaceId) {
         return workspaceListService.getWorkspaceListByWorkspaceId(workspaceId);
     }
 
     @PostMapping("/{workspaceId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public ResponseEntity<WorkspaceList> addWorkspaceListByWorkspaceId(@PathVariable(name = "workspaceId") Long workspaceId, @RequestBody WorkspaceList workspaceList) {
         return workspaceListService.addWorkspaceListByWorkspaceId(workspaceId, workspaceList);
     }
 
     @DeleteMapping("/{workspaceListId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public void deleteWorkspaceListById(@PathVariable(name = "workspaceListId") Long workspaceListId) {
         workspaceListService.deleteWorkspaceListById(workspaceListId);
     }
