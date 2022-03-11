@@ -17,10 +17,10 @@ import java.util.Optional;
 @Service
 public class WorkspaceService {
 
-    private WorkspaceRepository workspaceRepository;
-    private UserRepository userRepository;
-    private TaskRepository taskRepository;
-    private WorkspaceListRepository workspaceListRepository;
+    private final WorkspaceRepository workspaceRepository;
+    private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
+    private final WorkspaceListRepository workspaceListRepository;
 
     @Autowired
     public WorkspaceService(UserRepository userRepository,
@@ -66,5 +66,14 @@ public class WorkspaceService {
 
         }
 
+    }
+
+    public List<WorkspaceDTO> getWorkspacesByUserId(Long userId) {
+        List<Workspace> workspaces = workspaceRepository.findAllByUserId(userId);
+        List<WorkspaceDTO> workspaceDTOS = new ArrayList<>();
+        for (Workspace workspace : workspaces) {
+            workspaceDTOS.add(new WorkspaceDTO(workspace));
+        }
+        return workspaceDTOS;
     }
 }
