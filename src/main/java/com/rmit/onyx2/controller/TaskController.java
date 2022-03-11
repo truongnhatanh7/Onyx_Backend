@@ -21,16 +21,19 @@ public class TaskController {
     }
 
     @GetMapping("/{listId}")
-    public Set<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    public List<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {
         return taskService.getAllTasksByListId(listId);
     }
 
     @PostMapping("/{listId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public ResponseEntity<Task> addTaskByListId(@PathVariable(name = "listId") Long listId, @RequestBody Task task) {
         return taskService.addTaskByListId(listId, task);
     }
 
     @DeleteMapping("/{taskId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public void deleteTaskById(@PathVariable(name = "taskId") Long taskId) {
 
         taskService.deleteTaskById(taskId);

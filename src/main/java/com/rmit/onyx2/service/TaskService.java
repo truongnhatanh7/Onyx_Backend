@@ -24,7 +24,7 @@ public class TaskService {
         this.workspaceListRepository = workspaceListRepository;
     }
 
-    public Set<Task> getAllTasksByListId(Long listId) {
+    public List<Task> getAllTasksByListId(Long listId) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
         if (list.isPresent()) {
             return list.get().getTasks();
@@ -36,9 +36,10 @@ public class TaskService {
     public ResponseEntity<Task> addTaskByListId(Long listId, Task task) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
         if (list.isPresent()) {
-            list.get().getTasks().add(task);
+//            list.get().getTasks().add(task);
             task.setWorkspaceList(list.get());
-            workspaceListRepository.save(list.get());
+//            workspaceListRepository.save(list.get());
+            taskRepository.save(task);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
