@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/v1/workspace")
 public class WorkspaceController {
 
-    private WorkspaceService workspaceService;
+    private final WorkspaceService workspaceService;
 
     @Autowired
     public WorkspaceController(WorkspaceService workspaceService) {
@@ -22,8 +22,15 @@ public class WorkspaceController {
     }
 
     @GetMapping
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public List<WorkspaceDTO> getAllWorkspaces() {
         return workspaceService.getAllWorkspaces();
+    }
+
+    @GetMapping("/get-workspace-by-user-id/{userId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    public List<WorkspaceDTO> getWorkspaceByUserId(Long userId) {
+        return workspaceService.getWorkspacesByUserId(userId);
     }
 
     @PostMapping
