@@ -2,12 +2,15 @@ package com.rmit.onyx2.controller;
 
 import com.rmit.onyx2.model.User;
 import com.rmit.onyx2.model.UserDTO;
+import com.rmit.onyx2.model.Workspace;
+import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -36,7 +39,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<User> deleteUserById(@PathVariable(name = "userId") long userId) {
-        return userService.deleteUserById(userId);
+    public void deleteUserById(@PathVariable(name = "userId") Long userId) {
+        userService.deleteUserById(userId);
     }
+
 }

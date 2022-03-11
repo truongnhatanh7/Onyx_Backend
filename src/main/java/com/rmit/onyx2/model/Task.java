@@ -2,6 +2,8 @@ package com.rmit.onyx2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -18,7 +20,7 @@ public class Task {
     @Column(name = "task_content")
     private String taskContent;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "list_id", referencedColumnName = "list_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

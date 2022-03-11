@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TaskService {
@@ -23,7 +24,7 @@ public class TaskService {
         this.workspaceListRepository = workspaceListRepository;
     }
 
-    public List<Task> getAllTasksByListId(Long listId) {
+    public Set<Task> getAllTasksByListId(Long listId) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
         if (list.isPresent()) {
             return list.get().getTasks();
@@ -43,13 +44,7 @@ public class TaskService {
         return ResponseEntity.badRequest().build();
     }
 
-    public ResponseEntity<Task> deleteTaskById(Long taskId, Long listId) {
-        //Find the list id
-        Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
-        if(list.isPresent()) {
-            list.get().getTasks().remove(taskId);
-            return ResponseEntity.ok().build();
-        }
-       return ResponseEntity.badRequest().build();
+    public void deleteTaskById(Long taskId) {
+        taskRepository.deleteById(taskId);
     }
 }

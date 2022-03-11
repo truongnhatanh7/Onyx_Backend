@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/task")
@@ -20,7 +21,7 @@ public class TaskController {
     }
 
     @GetMapping("/{listId}")
-    public List<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {
+    public Set<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {
         return taskService.getAllTasksByListId(listId);
     }
 
@@ -29,9 +30,10 @@ public class TaskController {
         return taskService.addTaskByListId(listId, task);
     }
 
-    @DeleteMapping("/{workspaceId}/{task_id}")
-    public void deleteTaskById(@PathVariable(name = "taskId") Long taskId, @PathVariable(name = "workspaceId") Long workspaceId) {
-        //TODO: Exception handling
-        taskService.deleteTaskById(workspaceId,taskId);
+    @DeleteMapping("/{taskId}")
+    public void deleteTaskById(@PathVariable(name = "taskId") Long taskId) {
+
+        taskService.deleteTaskById(taskId);
     }
+
 }

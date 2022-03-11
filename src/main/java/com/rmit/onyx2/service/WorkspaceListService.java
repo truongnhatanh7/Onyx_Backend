@@ -1,7 +1,9 @@
 package com.rmit.onyx2.service;
 
+import com.rmit.onyx2.model.Task;
 import com.rmit.onyx2.model.Workspace;
 import com.rmit.onyx2.model.WorkspaceList;
+import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +19,13 @@ public class WorkspaceListService {
 
     private WorkspaceListRepository workspaceListRepository;
     private WorkspaceRepository workspaceRepository;
+    private TaskRepository taskRepository;
 
     @Autowired
-    public WorkspaceListService(WorkspaceListRepository workspaceListRepository, WorkspaceRepository workspaceRepository) {
+    public WorkspaceListService(WorkspaceListRepository workspaceListRepository, WorkspaceRepository workspaceRepository, TaskRepository taskRepository) {
         this.workspaceListRepository = workspaceListRepository;
         this.workspaceRepository = workspaceRepository;
+        this.taskRepository = taskRepository;
     }
 
     public List<WorkspaceList> getWorkspaceListByWorkspaceId(Long id) {
@@ -43,17 +47,13 @@ public class WorkspaceListService {
         return ResponseEntity.badRequest().build();
     }
 
-    public ResponseEntity<WorkspaceList>deleteWorkSpaceListById(long listID, long workspaceId) {
-       List<WorkspaceList> workspaceList = getWorkspaceListByWorkspaceId(workspaceId);
-       Workspace workspace = workspaceRepository.getById(workspaceId);
-       if(workspaceList != null) {
-           if(workspaceList.size() > listID && listID >0) {
-               workspaceList.remove(listID);
-               workspace.setWorkspaceLists(workspaceList);
-               workspaceRepository.save(workspace);
-               return ResponseEntity.ok().build();
-           }
-       }
-        return ResponseEntity.badRequest().build();
+    public void deleteWorkspaceListById(Long workspaceListId) {
+        Optional<WorkspaceList> temp = workspaceListRepository.findById(workspaceListId);
+        if (temp.isPresent()) {
+            for (Task t : temp.get().getTasks()) {
+                taskRepository.deleteById(t.getTaskId());
+            }
+            workspaceListRepository.deleteById(workspaceListId);
+        }
     }
 }
