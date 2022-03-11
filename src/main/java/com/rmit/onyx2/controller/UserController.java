@@ -24,21 +24,25 @@ public class UserController {
     }
 
     @GetMapping("/all-users/")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @PostMapping
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public ResponseEntity<User> addUser(@RequestBody User user) {
         return userService.addUser(user);
     }
 
     @PostMapping("/add-workspace-for-user-by-id/{workspaceId}/{userId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public ResponseEntity<User> addWorkspaceForUserById(@PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
         return userService.addWorkspaceForUserById(workspaceId, userId);
     }
 
     @DeleteMapping("/{userId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public void deleteUserById(@PathVariable(name = "userId") Long userId) {
         userService.deleteUserById(userId);
     }
