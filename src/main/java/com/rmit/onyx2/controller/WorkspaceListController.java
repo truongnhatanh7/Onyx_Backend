@@ -31,8 +31,8 @@ public class WorkspaceListController {
         return workspaceListService.addWorkspaceListByWorkspaceId(workspaceId, workspaceList);
     }
 
-    @DeleteMapping("/{workspaceId}/{listId}")
-    public ResponseEntity<WorkspaceList> deleteWorkSpaceListById(@PathVariable(name="listId") long listId, @PathVariable(name="workspaceId") long workspaceId) {
-        return workspaceListService.deleteWorkSpaceListById(listId,workspaceId);
+    @DeleteMapping("/{workspaceListId}")
+    public void deleteWorkspaceListById(@PathVariable(name = "workspaceListId") Long workspaceListId) {
+        workspaceListService.deleteWorkspaceListById(workspaceListId);
     }
 }

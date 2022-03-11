@@ -1,9 +1,9 @@
 package com.rmit.onyx2.service;
 
-import com.rmit.onyx2.model.User;
-import com.rmit.onyx2.model.UserDTO;
-import com.rmit.onyx2.model.Workspace;
+import com.rmit.onyx2.model.*;
+import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.UserRepository;
+import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +20,21 @@ public class UserService {
 
     private UserRepository userRepository;
     private WorkspaceRepository workspaceRepository;
+    private WorkspaceListRepository workspaceListRepository;
+    private TaskRepository taskRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, WorkspaceRepository workspaceRepository) {
+    private WorkspaceService workspaceService;
+
+    @Autowired
+    public UserService(UserRepository userRepository,
+                       WorkspaceRepository workspaceRepository,
+                       WorkspaceListRepository workspaceListRepository,
+                       TaskRepository taskRepository) {
         this.userRepository = userRepository;
         this.workspaceRepository = workspaceRepository;
+        this.workspaceListRepository = workspaceListRepository;
+        this.taskRepository = taskRepository;
     }
 
     public List<UserDTO> getAllUsers() {
@@ -52,20 +62,27 @@ public class UserService {
         return ResponseEntity.badRequest().build();
     }
 
-    public ResponseEntity<User> deleteUserById(long userId){
+    public void deleteUserById(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        if(user.isPresent()) {
-            User tmpUser = user.get();
-//            //Loop through user list of work spaces to remove user
-//            for (Workspace workspace : tmpUser.getWorkspaces()) {
-//                if (workspace.getUsers().contains(tmpUser)) {
-//                    workspace.removeUser(tmpUser);
-//                }
-//            }
-//            userRepository.save(tmpUser);
-            userRepository.delete(tmpUser);
-            return ResponseEntity.ok().build();
+        if (user.isPresent()) {
+            // Remove orphan workspaces
+//            user.get().getWorkspaces().stream()
+//                    .filter(w -> w.getUsers().size() == 1)
+//                    .forEach(w -> workspaceService.deleteWorkspaceById(w.getWorkspaceId()));
+            user.get().getWorkspaces().clear();
+
+            // Remove user in workspaces
+            for (Workspace workspace : workspaceRepository.findAll()) {
+                workspace.getUsers().stream()
+                        .filter(u -> u.getUserId().equals(userId))
+                        .forEach(u -> {
+                            workspace.getUsers().remove(u);
+                            if (workspace.getUsers().isEmpty()) {
+                                workspaceService.deleteWorkspaceById(workspace.getWorkspaceId());
+                            }
+                        });
+            }
+            userRepository.deleteById(userId);
         }
-       return ResponseEntity.badRequest().build();
     }
 }

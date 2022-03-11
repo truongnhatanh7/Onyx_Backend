@@ -36,5 +36,5 @@ public class WorkspaceList {
     @OneToMany(mappedBy = "workspaceList",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<Task> tasks = new ArrayList<>();
+    private Set<Task> tasks = new HashSet<>();
 }
