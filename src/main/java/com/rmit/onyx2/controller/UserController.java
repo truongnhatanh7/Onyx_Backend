@@ -38,4 +38,9 @@ public class UserController {
         return userService.addWorkspaceForUserById(workspaceId, userId);
     }
 
+    @DeleteMapping("/{userId}")
+    public void deleteUserById(@PathVariable(name = "userId") Long userId) {
+        userService.deleteUserById(userId);
+    }
+
 }

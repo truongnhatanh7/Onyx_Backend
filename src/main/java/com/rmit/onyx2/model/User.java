@@ -32,7 +32,7 @@ public class User {
     private String password;
 
 
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
         name = "users_workspaces",
         joinColumns = {
@@ -42,7 +42,6 @@ public class User {
                 @JoinColumn(name = "workspace_id")
         }
     )
-
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Workspace> workspaces = new HashSet<>();
