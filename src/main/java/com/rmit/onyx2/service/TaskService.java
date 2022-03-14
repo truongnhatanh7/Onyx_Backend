@@ -32,6 +32,14 @@ public class TaskService {
         return null;
     }
 
+    public ResponseEntity<Task> editTask (Task task) {
+        Optional<Task> taskTmp =  taskRepository.findById(task.getTaskId());
+        if(taskTmp.isPresent()) {
+            taskRepository.save(task);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
 
     public ResponseEntity<Task> addTaskByListId(Long listId, Task task) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
