@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-Hello
 @RestController
 @RequestMapping("api/v1/list")
 public class WorkspaceListController {
