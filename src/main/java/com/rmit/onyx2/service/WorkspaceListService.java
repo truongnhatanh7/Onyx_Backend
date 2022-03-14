@@ -47,10 +47,10 @@ public class WorkspaceListService {
     }
 
     //A class to edit the information of workspace
-    public WorkspaceList (WorkspaceList workspaceList) {
+    public WorkspaceList editWorkspaceList (WorkspaceList workspaceList) {
         Optional<WorkspaceList> workspaceListTmp =  workspaceListRepository.findById(workspaceList.getListId());
         if(workspaceListTmp.isPresent()) {
-//            workspaceListRepository.save(workspaceList);
+            workspaceListRepository.save(workspaceList);
 //            return ResponseEntity.ok().build();
             return workspaceListRepository.getById(workspaceList.getListId());
         }
