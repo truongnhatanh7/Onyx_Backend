@@ -31,10 +31,10 @@ public class WorkspaceListController {
         return workspaceListService.addWorkspaceListByWorkspaceId(workspaceId, workspaceList);
     }
 
-    @PutMapping("")
+    @PutMapping("/{workspaceId}")
     @CrossOrigin(origins = "http://127.0.0.1:5500")
-    public WorkspaceList editWorkspaceList(@RequestBody WorkspaceList workspaceList){
-        return workspaceListService.editWorkspaceList(workspaceList);
+    public Integer editWorkspaceList(@RequestBody WorkspaceList workspaceList,@PathVariable(name = "workspaceId") Long workspaceId){
+        return workspaceListService.editWorkspaceList(workspaceList,workspaceId);
     }
 
     @DeleteMapping("/{workspaceListId}")
