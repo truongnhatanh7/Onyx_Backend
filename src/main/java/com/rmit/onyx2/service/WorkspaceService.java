@@ -5,13 +5,12 @@ import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
-import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -67,6 +66,16 @@ public class WorkspaceService {
         }
 
     }
+
+    public ResponseEntity<Workspace> editWorkspace(Workspace workSpace) {
+        Optional<Workspace> workspaceTmp = workspaceRepository.findById(workSpace.getWorkspaceId());
+        if (workspaceTmp.isPresent()) {
+            workspaceRepository.save(workSpace);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
 
     public List<WorkspaceDTO> getWorkspacesByUserId(Long userId) {
         List<Workspace> workspaces = workspaceRepository.findAllByUserId(userId);

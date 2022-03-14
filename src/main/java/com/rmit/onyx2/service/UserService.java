@@ -1,19 +1,19 @@
 package com.rmit.onyx2.service;
 
-import com.rmit.onyx2.model.*;
+import com.rmit.onyx2.model.User;
+import com.rmit.onyx2.model.UserDTO;
+import com.rmit.onyx2.model.Workspace;
 import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserService {
@@ -57,6 +57,16 @@ public class UserService {
         if (user.isPresent() && workspace.isPresent()) {
             user.get().getWorkspaces().add(workspace.get());
             userRepository.save(user.get());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    //A function to edit user
+    public ResponseEntity<User> editUser(User user) {
+        Optional<User> userTmp = userRepository.findById(user.getUserId());
+        if (userTmp.isPresent()) {
+            userRepository.save(user);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
