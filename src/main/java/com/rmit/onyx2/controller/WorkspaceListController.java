@@ -33,6 +33,12 @@ public class WorkspaceListController {
         return workspaceListService.addWorkspaceListByWorkspaceId(workspaceId, workspaceList);
     }
 
+    @PutMapping("")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    public ResponseEntity<WorkspaceList> updateWorkspaceList(@RequestBody WorkspaceList workspaceList){
+        return workspaceListService.editWorkspaceList(workspaceList);
+    }
+
     @DeleteMapping("/{workspaceListId}")
     @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public void deleteWorkspaceListById(@PathVariable(name = "workspaceListId") Long workspaceListId) {
