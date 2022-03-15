@@ -56,7 +56,7 @@ public class TaskService {
         return ResponseEntity.badRequest().build();
     }
 
-    //Incase of switching list
+    //In case of switching list
     @Transactional
     public ResponseEntity<Task> editTask (Task task, Long destinationListId) {
         String hsql;

@@ -95,4 +95,12 @@ public class UserService {
             userRepository.deleteById(userId);
         }
     }
+
+    public UserDTO getUserById(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            return new UserDTO(user.get());
+        }
+        return new UserDTO();
+    }
 }

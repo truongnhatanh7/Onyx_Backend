@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class WorkspaceService {
@@ -41,8 +39,9 @@ public class WorkspaceService {
         return getResult;
     }
 
-    public void addWorkspace(Workspace workspace) {
-        workspaceRepository.saveAndFlush(workspace);
+    public WorkspaceDTO addWorkspace(Workspace workspace) {
+        return new WorkspaceDTO(workspaceRepository.saveAndFlush(workspace));
+
     }
 
     public void deleteWorkspaceById(Long workspaceId) {
@@ -78,11 +77,15 @@ public class WorkspaceService {
 
 
     public List<WorkspaceDTO> getWorkspacesByUserId(Long userId) {
-        List<Workspace> workspaces = workspaceRepository.findAllByUserId(userId);
         List<WorkspaceDTO> workspaceDTOS = new ArrayList<>();
-        for (Workspace workspace : workspaces) {
-            workspaceDTOS.add(new WorkspaceDTO(workspace));
+
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            for (Workspace workspace : user.get().getWorkspaces()) {
+                workspaceDTOS.add(new WorkspaceDTO(workspace));
+            }
         }
+
         return workspaceDTOS;
     }
 }
