@@ -26,6 +26,13 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+//    @GetMapping("/{userId}/")
+    @GetMapping("/find-by-id/{userId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    public UserDTO getUserById(@PathVariable(name = "userId") Long userId) {
+        return userService.getUserById(userId);
+    }
+
     @PostMapping
     @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public ResponseEntity<User> addUser(@RequestBody User user) {
