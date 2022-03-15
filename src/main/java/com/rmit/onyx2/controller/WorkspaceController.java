@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/workspace")
@@ -28,14 +29,14 @@ public class WorkspaceController {
 
     @GetMapping("/get-workspace-by-user-id/{userId}")
     @CrossOrigin(origins = "http://127.0.0.1:5500/")
-    public List<WorkspaceDTO> getWorkspaceByUserId(Long userId) {
+    public List<WorkspaceDTO> getWorkspaceByUserId(@PathVariable(name = "userId") Long userId) {
         return workspaceService.getWorkspacesByUserId(userId);
     }
 
     @PostMapping
     @CrossOrigin(origins = "http://127.0.0.1:5500/")
-    public void addWorkspace(@RequestBody Workspace workspace) {
-        workspaceService.addWorkspace(workspace);
+    public WorkspaceDTO addWorkspace(@RequestBody Workspace workspace) {
+        return workspaceService.addWorkspace(workspace);
     }
 
     @PutMapping("")
