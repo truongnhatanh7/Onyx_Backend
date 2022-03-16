@@ -15,9 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class WorkspaceListService {
@@ -35,10 +33,16 @@ public class WorkspaceListService {
         this.taskRepository = taskRepository;
     }
 
-    public Set<WorkspaceList> getWorkspaceListByWorkspaceId(Long id) {
+    public List<WorkspaceList> getWorkspaceListByWorkspaceId(Long id) {
         Optional<Workspace> workspace = workspaceRepository.findById(id);
         if (workspace.isPresent()) {
-            return workspace.get().getWorkspaceLists();
+            workspace.get().getWorkspaceLists();
+            List<WorkspaceList> temp = new ArrayList<>();
+            for (WorkspaceList workspaceList : workspace.get().getWorkspaceLists()) {
+                temp.add(workspaceList);
+            }
+            temp.sort(Comparator.comparing(WorkspaceList::getListId));
+            return temp;
         }
         return null;
     }
