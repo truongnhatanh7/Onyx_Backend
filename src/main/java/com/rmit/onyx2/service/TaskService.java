@@ -81,14 +81,19 @@ public class TaskService {
         }
         return ResponseEntity.badRequest().build();
     }
-    public ResponseEntity<Task> addTaskByListId(Long listId, Task task) {
+    public Task addTaskByListId(Long listId, Task task) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
         if (list.isPresent()) {
             task.setWorkspaceList(list.get());
             taskRepository.save(task);
-            return ResponseEntity.ok().build();
+            List<Task> temp =  taskRepository.findAll();
+            if (temp.size() > 0) {
+                return temp.get(temp.size() -1);
+            } else {
+                return new Task();
+            }
         }
-        return ResponseEntity.badRequest().build();
+        return new Task();
     }
 
     public void deleteTaskById(Long taskId) {
