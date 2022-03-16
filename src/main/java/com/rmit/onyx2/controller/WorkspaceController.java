@@ -27,6 +27,12 @@ public class WorkspaceController {
         return workspaceService.getAllWorkspaces();
     }
 
+    @GetMapping("/get-workspace/{workspaceId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    public WorkspaceDTO getWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId) {
+        return workspaceService.getWorkspaceById(workspaceId);
+    }
+
     @GetMapping("/get-workspace-by-user-id/{userId}")
     @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public List<WorkspaceDTO> getWorkspaceByUserId(@PathVariable(name = "userId") Long userId) {
