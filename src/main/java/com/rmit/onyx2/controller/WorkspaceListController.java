@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -22,7 +23,7 @@ public class WorkspaceListController {
 
     @GetMapping("/{workspaceId}")
     @CrossOrigin(origins = "http://127.0.0.1:5500/")
-    public Set<WorkspaceList> getWorkspaceListByWorkspaceId(@PathVariable(name = "workspaceId") Long workspaceId) {
+    public List<WorkspaceList> getWorkspaceListByWorkspaceId(@PathVariable(name = "workspaceId") Long workspaceId) {
         return workspaceListService.getWorkspaceListByWorkspaceId(workspaceId);
     }
 
