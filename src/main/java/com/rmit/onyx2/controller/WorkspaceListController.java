@@ -1,6 +1,7 @@
 package com.rmit.onyx2.controller;
 
 import com.rmit.onyx2.model.WorkspaceList;
+import com.rmit.onyx2.model.WorkspaceListDTO;
 import com.rmit.onyx2.service.WorkspaceListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,8 @@ public class WorkspaceListController {
 
     @PostMapping("/{workspaceId}")
     @CrossOrigin(origins = "http://127.0.0.1:5500/")
-    public ResponseEntity<WorkspaceList> addWorkspaceListByWorkspaceId(@PathVariable(name = "workspaceId") Long workspaceId, @RequestBody WorkspaceList workspaceList) {
+    @ResponseBody
+    public WorkspaceListDTO addWorkspaceListByWorkspaceId(@PathVariable(name = "workspaceId") Long workspaceId, @RequestBody WorkspaceList workspaceList) {
         return workspaceListService.addWorkspaceListByWorkspaceId(workspaceId, workspaceList);
     }
 
