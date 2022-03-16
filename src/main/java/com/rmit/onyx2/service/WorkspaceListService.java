@@ -3,6 +3,7 @@ package com.rmit.onyx2.service;
 import com.rmit.onyx2.model.Task;
 import com.rmit.onyx2.model.Workspace;
 import com.rmit.onyx2.model.WorkspaceList;
+import com.rmit.onyx2.model.WorkspaceListDTO;
 import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,15 +43,20 @@ public class WorkspaceListService {
         return null;
     }
 
-    public ResponseEntity<WorkspaceList> addWorkspaceListByWorkspaceId(Long workspaceId, WorkspaceList workspaceList) {
+    public WorkspaceListDTO addWorkspaceListByWorkspaceId(Long workspaceId, WorkspaceList workspaceList) {
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
         if (workspace.isPresent()) {
-            workspace.get().getWorkspaceLists().add(workspaceList);
             workspaceList.setWorkspace(workspace.get());
-            workspaceRepository.save(workspace.get());
-            return ResponseEntity.ok().build();
+            workspaceListRepository.save(workspaceList);
+            List<WorkspaceList> temp = workspaceListRepository.findAll();
+            if (temp.size() > 0) {
+                WorkspaceListDTO listDTO = new WorkspaceListDTO(temp.get(temp.size() - 1));
+                return listDTO;
+            } else {
+                return new WorkspaceListDTO();
+            }
         }
-        return ResponseEntity.badRequest().build();
+        return new WorkspaceListDTO();
     }
 
     //A class to edit the information of workspace
