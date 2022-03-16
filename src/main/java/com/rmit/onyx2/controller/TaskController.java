@@ -26,7 +26,7 @@ public class TaskController {
     }
 
     @PostMapping("/{listId}")
-    public ResponseEntity<Task> addTaskByListId(@PathVariable(name = "listId") Long listId, @RequestBody Task task) {
+    public Task addTaskByListId(@PathVariable(name = "listId") Long listId, @RequestBody Task task) {
         return taskService.addTaskByListId(listId, task);
     }
 
