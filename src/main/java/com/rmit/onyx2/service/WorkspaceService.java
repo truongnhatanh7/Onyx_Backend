@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 @Service
@@ -87,5 +88,13 @@ public class WorkspaceService {
         }
 
         return workspaceDTOS;
+    }
+
+    public WorkspaceDTO getWorkspaceById(Long workspaceId) {
+        Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
+        if (workspace.isPresent()) {
+            return new WorkspaceDTO(workspace.get());
+        }
+        return new WorkspaceDTO();
     }
 }
