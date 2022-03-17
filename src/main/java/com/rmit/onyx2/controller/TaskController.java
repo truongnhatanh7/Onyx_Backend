@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://127.0.0.1:5500/")
+
 @RestController
 @RequestMapping("/api/v1/task")
+@CrossOrigin(origins = "https://onyx-main.herokuapp.com")
 public class TaskController {
 
     private TaskService taskService;
