@@ -22,39 +22,38 @@ public class UserController {
     }
 
     @GetMapping("/all-users/")
-//    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 
-//    @GetMapping("/{userId}/")
     @GetMapping("/find-by-id/{userId}")
-//    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public UserDTO getUserById(@PathVariable(name = "userId") Long userId) {
         return userService.getUserById(userId);
     }
 
     @PostMapping
-//    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public ResponseEntity<User> addUser(@RequestBody User user) {
         return userService.addUser(user);
     }
 
     @PutMapping("")
-//    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public ResponseEntity<User> editUser(@RequestBody User user) {
         return userService.editUser(user);
     }
 
 
     @PostMapping("/add-workspace-for-user-by-id/{workspaceId}/{userId}")
-//    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public ResponseEntity<User> addWorkspaceForUserById(@PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
         return userService.addWorkspaceForUserById(workspaceId, userId);
     }
 
     @DeleteMapping("/{userId}")
-//    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public void deleteUserById(@PathVariable(name = "userId") Long userId) {
         userService.deleteUserById(userId);
     }
