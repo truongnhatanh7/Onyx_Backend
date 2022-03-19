@@ -61,6 +61,8 @@ public class WorkspaceService {
                         .forEach(w -> user.getWorkspaces().remove(w));
             }
 
+            workspace.get().getUsers().clear();
+
             workspaceRepository.deleteById(workspaceId);
 
         }
