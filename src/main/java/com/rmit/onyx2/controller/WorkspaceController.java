@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
+
 
 @RestController
 @RequestMapping("/api/v1/workspace")
@@ -52,7 +52,7 @@ public class WorkspaceController {
         return workspaceService.editWorkspace(workspace);
     }
 
-    @DeleteMapping("/{workspaceId}")
+    @DeleteMapping("/delete-workspace/{workspaceId}")
     @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public void deleteWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId) {
         workspaceService.deleteWorkspaceById(workspaceId);
