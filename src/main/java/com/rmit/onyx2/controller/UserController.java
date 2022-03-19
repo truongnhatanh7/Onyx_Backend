@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
-@CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class UserController {
 
     private UserService userService;

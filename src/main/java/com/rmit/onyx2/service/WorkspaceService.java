@@ -48,12 +48,6 @@ public class WorkspaceService {
     public void deleteWorkspaceById(Long workspaceId) {
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
         if (workspace.isPresent()) {
-            for (WorkspaceList workspaceList : workspace.get().getWorkspaceLists()) {
-                for (Task task : workspaceList.getTasks()) {
-                    taskRepository.deleteById(task.getTaskId());
-                }
-                workspaceListRepository.deleteById(workspaceList.getListId());
-            }
 
             for (User user : userRepository.findAll()) {
                 user.getWorkspaces().stream()
@@ -62,6 +56,18 @@ public class WorkspaceService {
             }
 
             workspace.get().getUsers().clear();
+
+
+            for (WorkspaceList workspaceList : workspace.get().getWorkspaceLists()) {
+                for (Task task : workspaceList.getTasks()) {
+                    taskRepository.deleteById(task.getTaskId());
+                }
+                workspaceListRepository.deleteById(workspaceList.getListId());
+            }
+
+            workspace.get().getWorkspaceLists().clear();
+
+
 
             workspaceRepository.deleteById(workspaceId);
 
