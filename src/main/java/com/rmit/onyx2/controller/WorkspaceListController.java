@@ -12,7 +12,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/list")
-@CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class WorkspaceListController {
 
     private WorkspaceListService workspaceListService;
@@ -23,26 +23,26 @@ public class WorkspaceListController {
     }
 
     @GetMapping("/{workspaceId}")
-    @CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     public List<WorkspaceList> getWorkspaceListByWorkspaceId(@PathVariable(name = "workspaceId") Long workspaceId) {
         return workspaceListService.getWorkspaceListByWorkspaceId(workspaceId);
     }
 
     @PostMapping("/{workspaceId}")
-    @CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @ResponseBody
     public WorkspaceListDTO addWorkspaceListByWorkspaceId(@PathVariable(name = "workspaceId") Long workspaceId, @RequestBody WorkspaceList workspaceList) {
         return workspaceListService.addWorkspaceListByWorkspaceId(workspaceId, workspaceList);
     }
 
     @PutMapping("/{workspaceId}")
-    @CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     public Integer editWorkspaceList(@RequestBody WorkspaceList workspaceList,@PathVariable(name = "workspaceId") Long workspaceId){
         return workspaceListService.editWorkspaceList(workspaceList,workspaceId);
     }
 
     @DeleteMapping("/{workspaceListId}")
-    @CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     public void deleteWorkspaceListById(@PathVariable(name = "workspaceListId") Long workspaceListId) {
         workspaceListService.deleteWorkspaceListById(workspaceListId);
     }

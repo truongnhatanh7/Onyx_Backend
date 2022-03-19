@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/workspace")
-@CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class WorkspaceController {
 
     private final WorkspaceService workspaceService;
@@ -23,31 +23,31 @@ public class WorkspaceController {
     }
 
     @GetMapping
-    @CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     public List<WorkspaceDTO> getAllWorkspaces() {
         return workspaceService.getAllWorkspaces();
     }
 
     @GetMapping("/get-workspace/{workspaceId}")
-    @CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     public WorkspaceDTO getWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId) {
         return workspaceService.getWorkspaceById(workspaceId);
     }
 
     @GetMapping("/get-workspace-by-user-id/{userId}")
-    @CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     public List<WorkspaceDTO> getWorkspaceByUserId(@PathVariable(name = "userId") Long userId) {
         return workspaceService.getWorkspacesByUserId(userId);
     }
 
     @PostMapping
-    @CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     public WorkspaceDTO addWorkspace(@RequestBody Workspace workspace) {
         return workspaceService.addWorkspace(workspace);
     }
 
     @PutMapping("")
-    @CrossOrigin(origins = "https://onyx-main.herokuapp.com")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     public ResponseEntity<Workspace> editWorkspace(@RequestBody Workspace workspace) {
         return workspaceService.editWorkspace(workspace);
     }
