@@ -1,12 +1,9 @@
 package com.rmit.onyx2;
 
-import com.rmit.onyx2.model.User;
-import com.rmit.onyx2.model.Workspace;
-import com.rmit.onyx2.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class Onyx2Application implements CommandLineRunner {
