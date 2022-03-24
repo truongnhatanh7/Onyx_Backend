@@ -46,9 +46,9 @@ public class UserService {
         return getResult;
     }
 
-    public ResponseEntity<User> addUser(User user) {
-        userRepository.save(user);
-        return ResponseEntity.ok().build();
+    public UserDTO addUser(User user) {
+        Long tempId = userRepository.save(user).getUserId();
+        return new UserDTO(userRepository.findById(tempId).get());
     }
 
     public ResponseEntity<User> addWorkspaceForUserById(Long workspaceId, Long userId) {

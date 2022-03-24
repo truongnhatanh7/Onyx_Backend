@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -22,7 +23,7 @@ public class TaskController {
     }
 
     @GetMapping("/{listId}")
-    public List<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {
+    public Set<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {
         return taskService.getAllTasksByListId(listId);
     }
 

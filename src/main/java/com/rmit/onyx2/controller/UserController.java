@@ -35,7 +35,7 @@ public class UserController {
 
     @PostMapping
     @CrossOrigin(origins = "http://127.0.0.1:5500/")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public UserDTO addUser(@RequestBody User user) {
         return userService.addUser(user);
     }
 
