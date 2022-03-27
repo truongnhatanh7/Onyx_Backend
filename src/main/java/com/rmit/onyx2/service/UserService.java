@@ -103,4 +103,15 @@ public class UserService {
         }
         return new UserDTO();
     }
+
+    public void removeUserFromWorkspaceById(Long workspaceId, Long userId) {
+        Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
+        Optional<User> user = userRepository.findById(userId);
+        if (workspace.isPresent() && user.isPresent()) {
+            workspace.get().getUsers().remove(user.get());
+            user.get().getWorkspaces().remove(workspace.get());
+            workspaceRepository.save(workspace.get());
+            userRepository.save(user.get());
+        }
+    }
 }

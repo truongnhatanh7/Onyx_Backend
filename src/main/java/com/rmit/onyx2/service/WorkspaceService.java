@@ -66,9 +66,6 @@ public class WorkspaceService {
             }
 
             workspace.get().getWorkspaceLists().clear();
-
-
-
             workspaceRepository.deleteById(workspaceId);
 
         }
