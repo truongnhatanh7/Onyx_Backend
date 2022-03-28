@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class UserController {
     @Operation(
             summary = "Get All user",
             responses = {
-                    @ApiResponse(responseCode  = "200",description = "Return a list of  user",
+                    @ApiResponse(responseCode = "200", description = "Return a list of  user",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = UserDTO.class))),
                     @ApiResponse(responseCode = "400", description = "null")}
@@ -45,10 +46,12 @@ public class UserController {
     @Operation(
             summary = "Get user by id",
             responses = {
-                    @ApiResponse(responseCode  = "200",description = "Return user",
+                    @ApiResponse(responseCode = "200", description = "Return user",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = UserDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "null")}
+                    @ApiResponse(responseCode = "400", description = "null",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ObjectUtils.Null.class))
+                    )}
     )
     public UserDTO getUserById(@PathVariable(name = "userId") Long userId) {
         return userService.getUserById(userId);
@@ -56,15 +59,18 @@ public class UserController {
 
     @PostMapping
     @Operation(
-            summary = "Add user",
+            summary = "Update user",
             responses = {
-                    @ApiResponse(responseCode  = "200",description = "Return user",
+                    @ApiResponse(responseCode = "200", description = "Return user",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ResponseEntity.class))),
-                    @ApiResponse(responseCode = "400", description = "null")}
+                                    schema = @Schema(implementation = UserDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "null",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ObjectUtils.Null.class))
+                    )}
     )
     public ResponseEntity<User> addUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Pet object that needs to be added to the store",
+            description = "Only need to specified name, username and password",
             required = true) User user) {
         return userService.addUser(user);
     }
@@ -73,10 +79,10 @@ public class UserController {
     @Operation(
             summary = "Edit user",
             responses = {
-                    @ApiResponse(responseCode  = "200",description = "Finish editing user",
+                    @ApiResponse(responseCode = "200", description = "Finish editing user",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ResponseEntity.class))),
-                    @ApiResponse(responseCode  = "400",description = "Failed editing user",
+                    @ApiResponse(responseCode = "400", description = "Failed editing user",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ResponseEntity.class)))}
     )
@@ -84,7 +90,7 @@ public class UserController {
             description = "Edit the existing user",
             required = true,
             content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = User.class)
+                    schema = @Schema(implementation = User.class)
             )
     ) User user) {
         return userService.editUser(user);
@@ -95,10 +101,13 @@ public class UserController {
     @Operation(
             summary = "Add work space for user by id",
             responses = {
-                    @ApiResponse(responseCode  = "200",description = "Finish adding workspace for user",
+                    @ApiResponse(responseCode = "200", description = "Finish adding workspace for user",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ResponseEntity.class))),
-                    @ApiResponse(responseCode = "400", description = "Failed to edit user")}
+                    @ApiResponse(responseCode = "400", description = "Failed to edit user",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ResponseEntity.class)
+                            ))}
     )
     public ResponseEntity<User> addWorkspaceForUserById(@PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
         return userService.addWorkspaceForUserById(workspaceId, userId);
@@ -108,12 +117,15 @@ public class UserController {
     @Operation(
             summary = "Remove user from workspace",
             responses = {
-                    @ApiResponse(responseCode  = "200",description = "Finish removing user from workspace",
+                    @ApiResponse(responseCode = "200", description = "Finish removing user from workspace",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ResponseEntity.class))),
-                    @ApiResponse(responseCode = "400", description = "Failed to edit user")}
+                    @ApiResponse(responseCode = "400", description = "Failed to edit user",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ResponseEntity.class)))
+            }
     )
-    public ResponseEntity<User> removeUserFromWorkspaceById( @PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
+    public ResponseEntity<User> removeUserFromWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
         return userService.removeUserFromWorkspaceById(workspaceId, userId);
     }
 
@@ -121,9 +133,13 @@ public class UserController {
     @Operation(
             summary = "Delete user from workspace",
             responses = {
-                    @ApiResponse(responseCode  = "200",description = "Finish removing user from workspace",
-                            content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "400", description = "Failed to edit user")}
+                    @ApiResponse(responseCode = "200", description = "Finish removing user from workspace",
+                            content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ObjectUtils.Null.class))),
+                    @ApiResponse(responseCode = "400", description = "Failed to edit user",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ObjectUtils.Null.class))
+                    )}
     )
     public void deleteUserById(@PathVariable(name = "userId") Long userId) {
         userService.deleteUserById(userId);

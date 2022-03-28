@@ -30,7 +30,7 @@ public class TaskController {
     @Operation(
             summary = "Get all task by list id",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return user",
+                    @ApiResponse(responseCode = "200", description = "Return Task",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = Task.class))),
                     @ApiResponse(responseCode = "400", description = "null")}
