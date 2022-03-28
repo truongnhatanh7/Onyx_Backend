@@ -76,7 +76,9 @@ public class UserController {
                     @ApiResponse(responseCode  = "200",description = "Finish editing user",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ResponseEntity.class))),
-                    @ApiResponse(responseCode = "400", description = "Failed to edit user")}
+                    @ApiResponse(responseCode  = "400",description = "Failed editing user",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ResponseEntity.class)))}
     )
     public ResponseEntity<User> editUser(@RequestBody(
             description = "Edit the existing user",
@@ -98,7 +100,7 @@ public class UserController {
                                     schema = @Schema(implementation = ResponseEntity.class))),
                     @ApiResponse(responseCode = "400", description = "Failed to edit user")}
     )
-    public ResponseEntity<User> addWorkspaceForUserById(@PathVariable(name = "workspaceId", value = "workspaceId") Long workspaceId, @PathVariable(name = "userId", value = "userId") Long userId) {
+    public ResponseEntity<User> addWorkspaceForUserById(@PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
         return userService.addWorkspaceForUserById(workspaceId, userId);
     }
 
@@ -111,7 +113,7 @@ public class UserController {
                                     schema = @Schema(implementation = ResponseEntity.class))),
                     @ApiResponse(responseCode = "400", description = "Failed to edit user")}
     )
-    public ResponseEntity<User> removeUserFromWorkspaceById( @PathVariable(name = "workspaceId", value = "workspaceId") Long workspaceId, @PathVariable(name = "userId", value = "userId") Long userId) {
+    public ResponseEntity<User> removeUserFromWorkspaceById( @PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
         return userService.removeUserFromWorkspaceById(workspaceId, userId);
     }
 
@@ -123,7 +125,7 @@ public class UserController {
                             content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "400", description = "Failed to edit user")}
     )
-    public void deleteUserById(@PathVariable(value ="userid", name = "userId") Long userId) {
+    public void deleteUserById(@PathVariable(name = "userId") Long userId) {
         userService.deleteUserById(userId);
     }
 }
