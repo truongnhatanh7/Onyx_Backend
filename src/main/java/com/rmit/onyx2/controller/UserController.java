@@ -42,6 +42,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+//    @GetMapping("/{userId}/")
     @GetMapping("/find-by-id/{userId}")
     @Operation(
             summary = "Get user by id",

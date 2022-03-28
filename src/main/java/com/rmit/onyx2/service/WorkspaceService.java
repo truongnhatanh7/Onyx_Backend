@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 @Service
@@ -54,12 +55,6 @@ public class WorkspaceService {
     public void deleteWorkspaceById(Long workspaceId) {
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
         if (workspace.isPresent()) {
-            for (WorkspaceList workspaceList : workspace.get().getWorkspaceLists()) {
-                for (Task task : workspaceList.getTasks()) {
-                    taskRepository.deleteById(task.getTaskId());
-                }
-                workspaceListRepository.deleteById(workspaceList.getListId());
-            }
 
             for (User user : userRepository.findAll()) {
                 user.getWorkspaces().stream()
@@ -67,6 +62,17 @@ public class WorkspaceService {
                         .forEach(w -> user.getWorkspaces().remove(w));
             }
 
+            workspace.get().getUsers().clear();
+
+
+            for (WorkspaceList workspaceList : workspace.get().getWorkspaceLists()) {
+                for (Task task : workspaceList.getTasks()) {
+                    taskRepository.deleteById(task.getTaskId());
+                }
+                workspaceListRepository.deleteById(workspaceList.getListId());
+            }
+
+            workspace.get().getWorkspaceLists().clear();
             workspaceRepository.deleteById(workspaceId);
 
         }
@@ -94,5 +100,13 @@ public class WorkspaceService {
         }
 
         return workspaceDTOS;
+    }
+
+    public WorkspaceDTO getWorkspaceById(Long workspaceId) {
+        Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
+        if (workspace.isPresent()) {
+            return new WorkspaceDTO(workspace.get());
+        }
+        return new WorkspaceDTO();
     }
 }

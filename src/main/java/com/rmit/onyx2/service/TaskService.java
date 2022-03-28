@@ -11,9 +11,12 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.SecondaryTable;
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TaskService {
@@ -29,7 +32,7 @@ public class TaskService {
         this.workspaceListRepository = workspaceListRepository;
     }
 
-    public List<Task> getAllTasksByListId(Long listId) {
+    public Set<Task> getAllTasksByListId(Long listId) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
         if (list.isPresent()) {
             return list.get().getTasks();
@@ -81,16 +84,19 @@ public class TaskService {
         }
         return ResponseEntity.badRequest().build();
     }
-    public ResponseEntity<Task> addTaskByListId(Long listId, Task task) {
+    public Task addTaskByListId(Long listId, Task task) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
         if (list.isPresent()) {
-//            list.get().getTasks().add(task);
             task.setWorkspaceList(list.get());
-//            workspaceListRepository.save(list.get());
             taskRepository.save(task);
-            return ResponseEntity.ok().build();
+            List<Task> temp =  taskRepository.findAll();
+            if (temp.size() > 0) {
+                return temp.get(temp.size() -1);
+            } else {
+                return new Task();
+            }
         }
-        return ResponseEntity.badRequest().build();
+        return new Task();
     }
 
     public void deleteTaskById(Long taskId) {
