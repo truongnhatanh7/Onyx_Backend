@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class Onyx2Application implements CommandLineRunner {
-
+    static final String url = "123";
     public static void main(String[] args) {
         SpringApplication.run(Onyx2Application.class, args);
     }

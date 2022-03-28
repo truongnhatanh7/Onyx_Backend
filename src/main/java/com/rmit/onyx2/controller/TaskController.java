@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
+
 
 
 @RestController
 @RequestMapping("/api/v1/task")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@CrossOrigin(origins = "http://127.0.0.1:5501")
 public class TaskController {
 
     private TaskService taskService;
@@ -22,7 +24,7 @@ public class TaskController {
     }
 
     @GetMapping("/{listId}")
-    public List<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {
+    public Set<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {
         return taskService.getAllTasksByListId(listId);
     }
 
