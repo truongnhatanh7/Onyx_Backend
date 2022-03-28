@@ -30,6 +30,13 @@ public class WorkspaceService {
         this.taskRepository = taskRepository;
     }
 
+    public Workspace getWorkspace(Long id) {
+        Optional<Workspace> optional = workspaceRepository.findById(id);
+        if(optional.isPresent()) {
+            return optional.get();
+        }
+        return null;
+    }
     public List<WorkspaceDTO> getAllWorkspaces() {
         List<Workspace> temp = workspaceRepository.findAll();
         List<WorkspaceDTO> getResult = new ArrayList<>();

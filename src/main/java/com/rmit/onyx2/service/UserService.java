@@ -96,6 +96,36 @@ public class UserService {
         }
     }
 
+    public ResponseEntity<User> removeUserFromWorkspaceById(Long workspaceId, Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            // Remove orphan workspaces
+//            user.get().getWorkspaces().stream()
+//                    .filter(w -> w.getUsers().size() == 1)
+//                    .forEach(w -> workspaceService.deleteWorkspaceById(w.getWorkspaceId()));
+            user.get().getWorkspaces().clear();
+
+            // Remove user in workspaces
+            Optional<Workspace> workspaceOptional = workspaceRepository.findById(workspaceId);
+
+            if (workspaceOptional.isPresent()) {
+                Workspace workspace = workspaceOptional.get();
+                workspace.getUsers().stream()
+                        .filter(u -> u.getUserId().equals(userId))
+                        .forEach(u -> {
+                            workspace.getUsers().remove(u);
+                            if (workspace.getUsers().isEmpty()) {
+                                workspaceService.deleteWorkspaceById(workspace.getWorkspaceId());
+                                ResponseEntity.ok().build();
+                            }
+                        });
+            }
+
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
     public UserDTO getUserById(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {

@@ -8,10 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
+
 
 @RestController
 @RequestMapping("/api/v1/workspace")
+@CrossOrigin(origins = "*")
 public class WorkspaceController {
 
     private final WorkspaceService workspaceService;
@@ -22,31 +23,31 @@ public class WorkspaceController {
     }
 
     @GetMapping
-    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public List<WorkspaceDTO> getAllWorkspaces() {
         return workspaceService.getAllWorkspaces();
     }
 
+    @GetMapping("/get-workspace/{workspaceId}")
+    public Workspace getWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId) {
+        return workspaceService.getWorkspace(workspaceId);
+    }
+
     @GetMapping("/get-workspace-by-user-id/{userId}")
-    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public List<WorkspaceDTO> getWorkspaceByUserId(@PathVariable(name = "userId") Long userId) {
         return workspaceService.getWorkspacesByUserId(userId);
     }
 
     @PostMapping
-    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     public WorkspaceDTO addWorkspace(@RequestBody Workspace workspace) {
         return workspaceService.addWorkspace(workspace);
     }
 
     @PutMapping("")
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
     public ResponseEntity<Workspace> editWorkspace(@RequestBody Workspace workspace) {
         return workspaceService.editWorkspace(workspace);
     }
 
-    @DeleteMapping("/{workspaceId}")
-    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+    @DeleteMapping("/delete-workspace/{workspaceId}")
     public void deleteWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId) {
         workspaceService.deleteWorkspaceById(workspaceId);
     }
