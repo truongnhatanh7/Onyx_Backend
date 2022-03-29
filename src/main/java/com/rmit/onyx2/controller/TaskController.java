@@ -7,18 +7,18 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 
 @RestController
 @RequestMapping("/api/v1/task")
 @CrossOrigin(origins = "*")
 public class TaskController {
-//TODO: Reedit this
     private TaskService taskService;
 
     @Autowired
@@ -30,12 +30,15 @@ public class TaskController {
     @Operation(
             summary = "Get all task by list id",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return Task",
+                    @ApiResponse(responseCode = "200", description = "Return a Set of all Task based on list ID",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = Task.class))),
-                    @ApiResponse(responseCode = "400", description = "null")}
+                    @ApiResponse(responseCode = "400", description = "Return Task",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Task.class)))
+            }
     )
-    public List<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {
+    public Set<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {
         return taskService.getAllTasksByListId(listId);
     }
 
@@ -43,14 +46,14 @@ public class TaskController {
     @Operation(
             summary = "Add Task by list ID",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return user",
+                    @ApiResponse(responseCode = "200", description = "Return Added Task",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ResponseEntity.class))),
+                                    schema = @Schema(implementation = Task.class))),
                     @ApiResponse(responseCode = "400", description = "invalid response",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ResponseEntity.class)))}
+                                    schema = @Schema(implementation = ObjectUtils.Null.class)))}
     )
-    public ResponseEntity<Task> addTaskByListId(@PathVariable(name = "listId") Long listId, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public Task addTaskByListId(@PathVariable(name = "listId") Long listId, @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Add task to the list ID",
             required = true,
             content = @Content(mediaType = "application/json",
@@ -61,9 +64,9 @@ public class TaskController {
 
     @PutMapping("")
     @Operation(
-            summary = "Add Task by list ID",
+            summary = "Edit task",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return user",
+                    @ApiResponse(responseCode = "200", description = "Edit task success fully",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ResponseEntity.class))),
                     @ApiResponse(responseCode = "400", description = "invalid response",
@@ -84,10 +87,13 @@ public class TaskController {
     @Operation(
             summary = "Change the list destination",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return user",
+                    @ApiResponse(responseCode = "200", description = "Edit task successfully",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ResponseEntity.class))),
-                    @ApiResponse(responseCode = "400", description = "null")}
+                    @ApiResponse(responseCode = "400", description = "Edit task failed",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ResponseEntity.class)))
+            }
     )
     public ResponseEntity<Task> editTask(@RequestBody(
             description = "edit Task",
@@ -98,10 +104,19 @@ public class TaskController {
         return taskService.editTask(task, destinationListId);
     }
 
-    @DeleteMapping("/{taskId}")
-    public void deleteTaskById(@PathVariable(name = "taskId") Long taskId) {
 
+    @DeleteMapping("/{taskId}")
+    @Operation(
+            summary = "Change the list destination",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Delete user",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ObjectUtils.Null.class))),
+                    @ApiResponse(responseCode = "400", description = "Delete user",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ObjectUtils.Null.class)))}
+    )
+    public void deleteTaskById(@PathVariable(name = "taskId") Long taskId) {
         taskService.deleteTaskById(taskId);
     }
-
 }

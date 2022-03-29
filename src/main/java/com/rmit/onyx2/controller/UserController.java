@@ -20,9 +20,8 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 @CrossOrigin(origins = "*")
 public class UserController {
-//TODO: Review documentation for this
-    private UserService userService;
 
+    private UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -36,7 +35,10 @@ public class UserController {
                     @ApiResponse(responseCode = "200", description = "Return a list of  user",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = UserDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "null")}
+                    @ApiResponse(responseCode = "400", description = "null",
+                            content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ObjectUtils.Null.class))
+                    )}
     )
     public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
@@ -70,7 +72,7 @@ public class UserController {
                                     schema = @Schema(implementation = ObjectUtils.Null.class))
                     )}
     )
-    public ResponseEntity<User> addUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public UserDTO addUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Only need to specified name, username and password",
             required = true) User user) {
         return userService.addUser(user);
@@ -120,14 +122,14 @@ public class UserController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Finish removing user from workspace",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ResponseEntity.class))),
+                                    schema = @Schema(implementation = ObjectUtils.Null.class))),
                     @ApiResponse(responseCode = "400", description = "Failed to edit user",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ResponseEntity.class)))
+                                    schema = @Schema(implementation = ObjectUtils.Null.class)))
             }
     )
-    public ResponseEntity<User> removeUserFromWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
-        return userService.removeUserFromWorkspaceById(workspaceId, userId);
+    public void removeUserFromWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
+        userService.removeUserFromWorkspaceById(workspaceId, userId);
     }
 
     @DeleteMapping("/{userId}")
