@@ -6,7 +6,6 @@ import com.rmit.onyx2.service.WorkspaceListService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,13 +55,7 @@ public class WorkspaceListController {
     )
     @ResponseBody
     public WorkspaceListDTO addWorkspaceListByWorkspaceId(@PathVariable(name = "workspaceId") Long workspaceId,
-                                                          @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                                                                  description = "Require a body of workspace",
-                                                                  required = true,
-                                                                  content = @Content(mediaType = "application/json",
-                                                                          schema = @Schema(implementation = WorkspaceList.class))
-
-            )WorkspaceList workspaceList) {
+                                                          @org.springframework.web.bind.annotation.RequestBody WorkspaceList workspaceList) {
         return workspaceListService.addWorkspaceListByWorkspaceId(workspaceId, workspaceList);
     }
 
@@ -78,12 +71,7 @@ public class WorkspaceListController {
                                     schema = @Schema(implementation = ObjectUtils.Null.class)
                             ))}
     )
-    public Integer editWorkspaceList(@RequestBody(
-            description = "Require a body of workspace",
-            required = true,
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = WorkspaceList.class))
-    ) WorkspaceList workspaceList,@PathVariable(name = "workspaceId") Long workspaceId){
+    public Integer editWorkspaceList(@RequestBody WorkspaceList workspaceList, @PathVariable(name = "workspaceId") Long workspaceId){
         return workspaceListService.editWorkspaceList(workspaceList,workspaceId);
     }
 
