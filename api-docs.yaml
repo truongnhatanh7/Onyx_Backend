@@ -1,0 +1,695 @@
+openapi: 3.0.1
+info:
+  title: OnyxAPI
+  description: This is a backend for Onyx Task Management System
+  version: '1.0'
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /api/v1/workspace:
+    get:
+      tags:
+        - workspace-controller
+      summary: Get all of the workspace
+      operationId: getAllWorkspaces
+      responses:
+        '200':
+          description: Return a list of workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+    put:
+      tags:
+        - workspace-controller
+      summary: Edit workspace information
+      operationId: editWorkspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workspace'
+        required: true
+      responses:
+        '200':
+          description: Successfully edit workspace
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: string
+    post:
+      tags:
+        - workspace-controller
+      summary: Add workspace
+      operationId: addWorkspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workspace'
+        required: true
+      responses:
+        '200':
+          description: Return added workspace in DB
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceDTO'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/user:
+    put:
+      tags:
+        - user-controller
+      summary: Edit user
+      operationId: editUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Finish editing user
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Failed editing user
+          content:
+            application/json:
+              schema:
+                type: string
+    post:
+      tags:
+        - user-controller
+      summary: Update user
+      operationId: addUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Return user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: 'null'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/task:
+    put:
+      tags:
+        - task-controller
+      summary: Edit task
+      operationId: editTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      responses:
+        '200':
+          description: Edit task success fully
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: invalid response
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/v1/task/{destinationListId}:
+    put:
+      tags:
+        - task-controller
+      summary: Change the list destination
+      operationId: editTask_1
+      parameters:
+        - name: destinationListId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      responses:
+        '200':
+          description: Edit task successfully
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Edit task failed
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/v1/list/{workspaceId}:
+    get:
+      tags:
+        - workspace-list-controller
+      summary: Get workspace list by workspace id
+      operationId: getWorkspaceListByWorkspaceId
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Return a list of workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceList'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+    put:
+      tags:
+        - workspace-list-controller
+      summary: Edit workspace list to workspace
+      operationId: editWorkspaceList
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceList'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+    post:
+      tags:
+        - workspace-list-controller
+      summary: Add workspace list into workspace by workspace id
+      operationId: addWorkspaceListByWorkspaceId
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceList'
+        required: true
+      responses:
+        '200':
+          description: Return WorkspaceListDTO
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceListDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/user/add-workspace-for-user-by-id/{workspaceId}/{userId}:
+    post:
+      tags:
+        - user-controller
+      summary: Add work space for user by id
+      operationId: addWorkspaceForUserById
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Finish adding workspace for user
+          content:
+            application/json: {}
+        '400':
+          description: Failed to edit user
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/v1/task/{listId}:
+    get:
+      tags:
+        - task-controller
+      summary: Get all task by list id
+      operationId: getAllTasksByListId
+      parameters:
+        - name: listId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Return a Set of all Task based on list ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Return Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+    post:
+      tags:
+        - task-controller
+      summary: Add Task by list ID
+      operationId: addTaskByListId
+      parameters:
+        - name: listId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      responses:
+        '200':
+          description: Return Added Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: invalid response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/workspace/get-workspace/{workspaceId}:
+    get:
+      tags:
+        - workspace-controller
+      summary: Get workspace by ID
+      operationId: getWorkspaceById
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Return a workspace with valid Id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/workspace/get-workspace-by-user-id/{userId}:
+    get:
+      tags:
+        - workspace-controller
+      summary: Get all of workspace by userId
+      operationId: getWorkspaceByUserId
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Return a list of workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/user/find-by-id/{userId}:
+    get:
+      tags:
+        - user-controller
+      summary: Get user by id
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Return user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: 'null'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/user/all-users/:
+    get:
+      tags:
+        - user-controller
+      summary: Get All user
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Return a list of  user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: 'null'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/workspace/delete-workspace/{workspaceId}:
+    delete:
+      tags:
+        - workspace-controller
+      summary: Delete workspace by ID
+      operationId: deleteWorkspaceById
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successfully edit workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/user/{userId}:
+    delete:
+      tags:
+        - user-controller
+      summary: Delete user from workspace
+      operationId: deleteUserById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Finish removing user from workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '400':
+          description: Failed to edit user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/user/remove-user-from-workspace/{workspaceId}/{userId}:
+    delete:
+      tags:
+        - user-controller
+      summary: Remove user from workspace
+      operationId: removeUserFromWorkspaceById
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Finish removing user from workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '400':
+          description: Failed to edit user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/task/{taskId}:
+    delete:
+      tags:
+        - task-controller
+      summary: Change the list destination
+      operationId: deleteTaskById
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Delete user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '400':
+          description: Delete user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /api/v1/list/{workspaceListId}:
+    delete:
+      tags:
+        - workspace-list-controller
+      summary: Delete workspace list by ID
+      operationId: deleteWorkspaceListById
+      parameters:
+        - name: workspaceListId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Null'
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        taskId:
+          type: integer
+          format: int64
+        taskContent:
+          type: string
+    User:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        workspaces:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Workspace'
+    Workspace:
+      type: object
+      properties:
+        workspaceId:
+          type: integer
+          format: int64
+        workspaceTitle:
+          type: string
+        users:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        workspaceLists:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceList'
+    WorkspaceList:
+      type: object
+      properties:
+        listId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        workspace:
+          $ref: '#/components/schemas/Workspace'
+        tasks:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+    'Null':
+      type: object
+    UserDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        workspaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceDTO'
+    WorkspaceDTO:
+      type: object
+      properties:
+        workspaceId:
+          type: integer
+          format: int64
+        workspaceTitle:
+          type: string
+        workspaceLists:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceListDTO'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDTO'
+    WorkspaceListDTO:
+      type: object
+      properties:
+        listId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        workspace:
+          $ref: '#/components/schemas/WorkspaceDTO'
