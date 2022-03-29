@@ -5,12 +5,14 @@ import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -73,7 +75,12 @@ public class WorkspaceService {
                 workspaceListRepository.deleteById(workspaceList.getListId());
             }
 
-            workspace.get().getWorkspaceLists().clear();
+            for (User user : userRepository.findAll()) {
+                user.getWorkspaces().stream()
+                        .filter(w -> w.getWorkspaceId().equals(workspaceId))
+                        .forEach(w -> user.getWorkspaces().remove(w));
+            }
+
             workspaceRepository.deleteById(workspaceId);
 
         }

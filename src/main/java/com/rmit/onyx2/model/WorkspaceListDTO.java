@@ -11,7 +11,6 @@ public class WorkspaceListDTO {
     private Long listId;
     private String name;
     private WorkspaceDTO workspace;
-//    private List<WorkspaceListDTO> workspaceListDTOS = new ArrayList<>();
 
     public WorkspaceListDTO(WorkspaceList workspaceList) {
         this.listId = workspaceList.getListId();
