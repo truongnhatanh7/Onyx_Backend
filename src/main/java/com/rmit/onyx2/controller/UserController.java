@@ -6,7 +6,6 @@ import com.rmit.onyx2.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,9 +71,7 @@ public class UserController {
                                     schema = @Schema(implementation = ObjectUtils.Null.class))
                     )}
     )
-    public UserDTO addUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Only need to specified name, username and password",
-            required = true) User user) {
+    public UserDTO addUser(@org.springframework.web.bind.annotation.RequestBody User user) {
         return userService.addUser(user);
     }
 
@@ -89,13 +86,7 @@ public class UserController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ResponseEntity.class)))}
     )
-    public ResponseEntity<User> editUser(@RequestBody(
-            description = "Edit the existing user",
-            required = true,
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = User.class)
-            )
-    ) User user) {
+    public ResponseEntity<User> editUser(@RequestBody User user) {
         return userService.editUser(user);
     }
 
@@ -105,8 +96,7 @@ public class UserController {
             summary = "Add work space for user by id",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Finish adding workspace for user",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ResponseEntity.class))),
+                            content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "400", description = "Failed to edit user",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ResponseEntity.class)

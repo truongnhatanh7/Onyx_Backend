@@ -5,7 +5,6 @@ import com.rmit.onyx2.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,12 +52,7 @@ public class TaskController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ObjectUtils.Null.class)))}
     )
-    public Task addTaskByListId(@PathVariable(name = "listId") Long listId, @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Add task to the list ID",
-            required = true,
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = Task.class))
-    ) Task task) {
+    public Task addTaskByListId(@PathVariable(name = "listId") Long listId, @org.springframework.web.bind.annotation.RequestBody Task task) {
         return taskService.addTaskByListId(listId, task);
     }
 
@@ -73,12 +67,7 @@ public class TaskController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ResponseEntity.class)))}
     )
-    public ResponseEntity<Task> editTask(@io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Edit task",
-            required = true,
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = Task.class))
-    ) Task task) {
+    public ResponseEntity<Task> editTask(@org.springframework.web.bind.annotation.RequestBody Task task) {
         return taskService.editTask(task);
     }
 
@@ -95,12 +84,7 @@ public class TaskController {
                                     schema = @Schema(implementation = ResponseEntity.class)))
             }
     )
-    public ResponseEntity<Task> editTask(@RequestBody(
-            description = "edit Task",
-            required = true,
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = Task.class))
-    ) Task task, @PathVariable(name = "destinationListId") Long destinationListId) {
+    public ResponseEntity<Task> editTask(@RequestBody Task task, @PathVariable(name = "destinationListId") Long destinationListId) {
         return taskService.editTask(task, destinationListId);
     }
 

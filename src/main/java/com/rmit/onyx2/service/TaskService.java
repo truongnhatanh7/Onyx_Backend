@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.SecondaryTable;
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -42,9 +40,6 @@ public class TaskService {
 
     @Transactional
     public ResponseEntity<Task> editTask (Task task) {
-        if(task.getTaskContent() ==null) {
-
-        }
         String hsql = "update Task t set t.taskContent =:content " +
                         "where t.taskId =: taskId ";
         Query query = entityManager.createQuery(hsql);
