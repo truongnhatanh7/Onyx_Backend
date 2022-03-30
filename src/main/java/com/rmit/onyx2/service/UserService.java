@@ -8,20 +8,29 @@ import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
+
 
     private UserRepository userRepository;
     private WorkspaceRepository workspaceRepository;
     private WorkspaceListRepository workspaceListRepository;
     private TaskRepository taskRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private WorkspaceService workspaceService;
@@ -63,13 +72,20 @@ public class UserService {
     }
 
     //A function to edit user
+    @Transactional
     public ResponseEntity<User> editUser(User user) {
-        Optional<User> userTmp = userRepository.findById(user.getUserId());
-        if (userTmp.isPresent()) {
-            userRepository.save(user);
-            return ResponseEntity.ok().build();
+        String hsql = "update User u set u.name =:name, u.username =:user_name, u.password =:password where u.userId =: userId";
+        Query query = entityManager.createQuery(hsql);
+        query.setParameter("userId",user.getUserId());
+        query.setParameter("name",user.getName());
+        query.setParameter("user_name",user.getName());
+        query.setParameter("password",user.getPassword());
+        entityManager.flush();
+        Integer result = query.executeUpdate();
+        if (result != 0) {
+           return ResponseEntity.ok().build();
         }
-        return ResponseEntity.badRequest().build();
+        return  ResponseEntity.badRequest().build();
     }
 
     public void deleteUserById(Long userId) {
