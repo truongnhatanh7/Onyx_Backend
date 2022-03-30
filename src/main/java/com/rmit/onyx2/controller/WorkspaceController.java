@@ -54,8 +54,8 @@ public class WorkspaceController {
                                     schema = @Schema(implementation = ObjectUtils.Null.class))
                     )}
     )
-    public Workspace getWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId) {
-        return workspaceService.getWorkspace(workspaceId);
+    public WorkspaceDTO getWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId) {
+        return workspaceService.getWorkspaceById(workspaceId);
     }
 
     @GetMapping("/get-workspace-by-user-id/{userId}")
