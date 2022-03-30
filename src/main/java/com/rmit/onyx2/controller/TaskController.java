@@ -13,7 +13,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/task")
-@CrossOrigin(origins = "http://127.0.0.1:5501")
+@CrossOrigin(origins = "*")
 public class TaskController {
 
     private TaskService taskService;
