@@ -8,7 +8,11 @@ import com.rmit.onyx2.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.swing.text.html.Option;
 import java.util.*;
 
@@ -19,6 +23,8 @@ public class WorkspaceService {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final WorkspaceListRepository workspaceListRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public WorkspaceService(UserRepository userRepository,
@@ -72,13 +78,18 @@ public class WorkspaceService {
 
     }
 
+    @Transactional
     public ResponseEntity<Workspace> editWorkspace(Workspace workSpace) {
-        Optional<Workspace> workspaceTmp = workspaceRepository.findById(workSpace.getWorkspaceId());
-        if (workspaceTmp.isPresent()) {
-            workspaceRepository.save(workSpace);
+        String hsql = "update Workspace w set w.workspaceTitle =: title where w.workspaceId =: id";
+        Query query = entityManager.createQuery(hsql);
+        query.setParameter("title",workSpace.getWorkspaceTitle());
+        query.setParameter("id",workSpace.getWorkspaceId());
+        entityManager.flush();
+        Integer result = query.executeUpdate();
+        if (result != 0) {
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.badRequest().build();
+        return  ResponseEntity.badRequest().build();
     }
 
 
