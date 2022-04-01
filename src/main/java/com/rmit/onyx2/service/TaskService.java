@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TaskService {
@@ -39,9 +40,6 @@ public class TaskService {
 
     @Transactional
     public ResponseEntity<Task> editTask (Task task) {
-        if(task.getTaskContent() ==null) {
-
-        }
         String hsql = "update Task t set t.taskContent =:content " +
                         "where t.taskId =: taskId ";
         Query query = entityManager.createQuery(hsql);
