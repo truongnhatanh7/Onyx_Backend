@@ -6,15 +6,14 @@ import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class TaskService {
@@ -33,6 +32,15 @@ public class TaskService {
     public Set<Task> getAllTasksByListId(Long listId) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
         if (list.isPresent()) {
+//            Set<Task> set = new HashSet<>();
+//            List<Task> result = new ArrayList<>();
+//            for (Task task : list.get().getTasks()) {
+//                if (set.contains(task)) {
+//                    continue;
+//                }
+//                result.add(task);
+//                set.add(task);
+//            }
             return list.get().getTasks();
         }
         return null;
@@ -86,7 +94,7 @@ public class TaskService {
             taskRepository.save(task);
             List<Task> temp =  taskRepository.findAll();
             if (temp.size() > 0) {
-                return temp.get(temp.size() -1);
+                return temp.get(temp.size() - 1);
             } else {
                 return new Task();
             }
@@ -96,5 +104,15 @@ public class TaskService {
 
     public void deleteTaskById(Long taskId) {
         taskRepository.deleteById(taskId);
+    }
+
+    @Transactional
+    @Async
+    public void setPos(Long taskId, Integer pos) {
+        Optional<Task> task = taskRepository.findById(taskId);
+        if (task.isPresent()) {
+            taskRepository.updatePos(taskId, pos);
+
+        }
     }
 }

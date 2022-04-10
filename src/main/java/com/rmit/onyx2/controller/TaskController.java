@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -71,8 +72,13 @@ public class TaskController {
         return taskService.editTask(task);
     }
 
+    @PatchMapping("/setPos/{taskId}/{pos}")
+    public void setPos(@PathVariable Long taskId, @PathVariable Integer pos) {
+        taskService.setPos(taskId, pos);
+    }
+
     //To change list destination
-    @PutMapping("/{destinationListId}")
+    @PutMapping("/switchList/{destinationListId}")
     @Operation(
             summary = "Change the list destination",
             responses = {
