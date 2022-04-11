@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title="OnyxAPI", version = "1.0", description = "This is a backend for Onyx Task Management System"))
+//@OpenAPIDefinition(info = @Info(title="OnyxAPI", version = "1.0", description = "This is a backend for Onyx Task Management System"))
 @EnableAsync
 public class Onyx2Application implements CommandLineRunner {
     static final String url = "123";
