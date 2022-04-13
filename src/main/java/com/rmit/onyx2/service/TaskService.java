@@ -6,21 +6,20 @@ import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class TaskService {
 
-    private TaskRepository taskRepository;
-    private WorkspaceListRepository workspaceListRepository;
+    private final TaskRepository taskRepository;
+    private final WorkspaceListRepository workspaceListRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -32,10 +31,7 @@ public class TaskService {
 
     public Set<Task> getAllTasksByListId(Long listId) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
-        if (list.isPresent()) {
-            return list.get().getTasks();
-        }
-        return null;
+        return list.map(WorkspaceList::getTasks).orElse(null);
     }
 
     @Transactional
@@ -86,7 +82,7 @@ public class TaskService {
             taskRepository.save(task);
             List<Task> temp =  taskRepository.findAll();
             if (temp.size() > 0) {
-                return temp.get(temp.size() -1);
+                return temp.get(temp.size() - 1);
             } else {
                 return new Task();
             }
@@ -96,5 +92,39 @@ public class TaskService {
 
     public void deleteTaskById(Long taskId) {
         taskRepository.deleteById(taskId);
+    }
+
+    @Transactional
+    @Async
+    public void setPos(Long taskId, Integer pos) {
+        Optional<Task> task = taskRepository.findById(taskId);
+        if (task.isPresent()) {
+            taskRepository.updatePos(taskId, pos);
+
+        }
+    }
+
+    @Transactional
+    public void setPriority(Long taskId, Integer priority) {
+        Optional<Task> task = taskRepository.findById(taskId);
+        if (task.isPresent()) {
+            taskRepository.updatePriority(taskId, priority);
+        }
+    }
+
+    @Transactional
+    public void setDesc(Long taskId, String description) {
+        Optional<Task> task = taskRepository.findById(taskId);
+        String hsql;
+        Query query;
+        if (task.isPresent()) {
+            hsql = "update Task t set t.description =:description where t.taskId=:taskId";
+            query = entityManager.createQuery(hsql);
+            query.setParameter("description", description);
+            query.setParameter("taskId", taskId);
+            entityManager.flush();
+            query.executeUpdate();
+            entityManager.clear();
+        }
     }
 }
