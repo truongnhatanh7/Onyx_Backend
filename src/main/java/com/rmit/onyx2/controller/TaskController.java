@@ -19,7 +19,7 @@ import java.util.Set;
 @RequestMapping("/api/v1/task")
 @CrossOrigin(origins = "*")
 public class TaskController {
-    private TaskService taskService;
+    private final TaskService taskService;
 
     @Autowired
     public TaskController(TaskService taskService) {
@@ -77,6 +77,8 @@ public class TaskController {
         taskService.setPos(taskId, pos);
     }
 
+    @PatchMapping("/setPriority/{taskId}/{priority}")
+    public void setPriority(@PathVariable Long taskId, @PathVariable Integer priority) { taskService.setPriority(taskId, priority); }
     //To change list destination
     @PutMapping("/switchList/{destinationListId}")
 //    @Operation(

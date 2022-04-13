@@ -21,6 +21,9 @@ public class Task {
     @Column(name = "pos")
     private Integer pos = 0;
 
+    @Column(name = "priority")
+    private Integer priority = 0;
+
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "list_id", referencedColumnName = "list_id")
     @EqualsAndHashCode.Exclude

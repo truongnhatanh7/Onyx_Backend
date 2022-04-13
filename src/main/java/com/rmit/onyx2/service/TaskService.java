@@ -18,8 +18,8 @@ import java.util.*;
 @Service
 public class TaskService {
 
-    private TaskRepository taskRepository;
-    private WorkspaceListRepository workspaceListRepository;
+    private final TaskRepository taskRepository;
+    private final WorkspaceListRepository workspaceListRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -31,19 +31,7 @@ public class TaskService {
 
     public Set<Task> getAllTasksByListId(Long listId) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
-        if (list.isPresent()) {
-//            Set<Task> set = new HashSet<>();
-//            List<Task> result = new ArrayList<>();
-//            for (Task task : list.get().getTasks()) {
-//                if (set.contains(task)) {
-//                    continue;
-//                }
-//                result.add(task);
-//                set.add(task);
-//            }
-            return list.get().getTasks();
-        }
-        return null;
+        return list.map(WorkspaceList::getTasks).orElse(null);
     }
 
     @Transactional
@@ -113,6 +101,14 @@ public class TaskService {
         if (task.isPresent()) {
             taskRepository.updatePos(taskId, pos);
 
+        }
+    }
+
+    @Transactional
+    public void setPriority(Long taskId, Integer priority) {
+        Optional<Task> task = taskRepository.findById(taskId);
+        if (task.isPresent()) {
+            taskRepository.updatePriority(taskId, priority);
         }
     }
 }
