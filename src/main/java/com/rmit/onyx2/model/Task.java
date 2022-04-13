@@ -3,6 +3,7 @@ package com.rmit.onyx2.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import javax.naming.Name;
 import javax.persistence.*;
 
 @Entity
@@ -23,6 +24,9 @@ public class Task {
 
     @Column(name = "priority")
     private Integer priority = 0;
+
+    @Column(name = "description")
+    private String description = "";
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "list_id", referencedColumnName = "list_id")

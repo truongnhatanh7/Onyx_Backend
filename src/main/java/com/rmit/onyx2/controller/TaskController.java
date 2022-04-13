@@ -77,6 +77,11 @@ public class TaskController {
         taskService.setPos(taskId, pos);
     }
 
+    @PatchMapping("/setDesc/{taskId}")
+    public void setDesc(@PathVariable Long taskId, @RequestBody String description) {
+        taskService.setDesc(taskId, description);
+    }
+
     @PatchMapping("/setPriority/{taskId}/{priority}")
     public void setPriority(@PathVariable Long taskId, @PathVariable Integer priority) { taskService.setPriority(taskId, priority); }
     //To change list destination

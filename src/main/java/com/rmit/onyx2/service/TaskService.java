@@ -111,4 +111,20 @@ public class TaskService {
             taskRepository.updatePriority(taskId, priority);
         }
     }
+
+    @Transactional
+    public void setDesc(Long taskId, String description) {
+        Optional<Task> task = taskRepository.findById(taskId);
+        String hsql;
+        Query query;
+        if (task.isPresent()) {
+            hsql = "update Task t set t.description =:description where t.taskId=:taskId";
+            query = entityManager.createQuery(hsql);
+            query.setParameter("description", description);
+            query.setParameter("taskId", taskId);
+            entityManager.flush();
+            query.executeUpdate();
+            entityManager.clear();
+        }
+    }
 }
