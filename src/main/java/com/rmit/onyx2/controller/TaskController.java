@@ -8,9 +8,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -80,6 +82,11 @@ public class TaskController {
     @PatchMapping("/setDesc/{taskId}")
     public void setDesc(@PathVariable Long taskId, @RequestBody String description) {
         taskService.setDesc(taskId, description);
+    }
+
+    @PatchMapping("/setDeadline/{taskId}")
+    public void setDeadline(@PathVariable Long taskId, @RequestParam("time") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate deadline) {
+        taskService.setDeadline(taskId, deadline);
     }
 
     @PatchMapping("/setPriority/{taskId}/{priority}")

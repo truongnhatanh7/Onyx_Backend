@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -121,6 +122,22 @@ public class TaskService {
             hsql = "update Task t set t.description =:description where t.taskId=:taskId";
             query = entityManager.createQuery(hsql);
             query.setParameter("description", description);
+            query.setParameter("taskId", taskId);
+            entityManager.flush();
+            query.executeUpdate();
+            entityManager.clear();
+        }
+    }
+
+    @Transactional
+    public void setDeadline(Long taskId, LocalDate deadline) {
+        Optional<Task> task = taskRepository.findById(taskId);
+        String hsql;
+        Query query;
+        if (task.isPresent()) {
+            hsql = "update Task t set t.deadline=:deadline where t.taskId=:taskId";
+            query = entityManager.createQuery(hsql);
+            query.setParameter("deadline", deadline);
             query.setParameter("taskId", taskId);
             entityManager.flush();
             query.executeUpdate();
