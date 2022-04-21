@@ -9,6 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.time.Month;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
@@ -44,6 +47,7 @@ class TaskControllerTest {
                 3,
                 0,
                 "Edit my recorded video and later render it",
+                LocalDate.now(),
                 null
         );
 
@@ -68,6 +72,7 @@ class TaskControllerTest {
                 3,
                 0,
                 "Edit my recorded video and later render it",
+                LocalDate.now(),
                 null
         );
 
@@ -90,6 +95,7 @@ class TaskControllerTest {
                 3,
                 0,
                 "Edit my recorded video and later render it",
+                LocalDate.now(),
                 null
         );
 
@@ -116,6 +122,7 @@ class TaskControllerTest {
                 3,
                 0,
                 "Edit my recorded video and later render it",
+                LocalDate.now(),
                 null
         );
         ArgumentCaptor<Long> taskIdCaptor = ArgumentCaptor.forClass(Long.class);

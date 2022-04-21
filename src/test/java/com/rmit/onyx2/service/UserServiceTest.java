@@ -3,6 +3,7 @@ package com.rmit.onyx2.service;
 import com.rmit.onyx2.model.User;
 import com.rmit.onyx2.model.UserDTO;
 import com.rmit.onyx2.model.Workspace;
+import com.rmit.onyx2.model.WorkspaceList;
 import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
 import org.junit.jupiter.api.Disabled;
@@ -14,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.*;
@@ -22,8 +22,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = UserServiceTest.class)
@@ -33,6 +32,9 @@ class UserServiceTest {
 
     @Mock
     WorkspaceRepository workspaceRepository;
+
+    @Mock
+    WorkspaceService workspaceService;
 
     @InjectMocks
     UserService userService;
@@ -84,9 +86,7 @@ class UserServiceTest {
 
         // When
         userService.getAllUsers();
-        temp.forEach(user -> {
-            getResult.add(new UserDTO(user));
-        });
+        temp.forEach(user -> getResult.add(new UserDTO(user)));
 
         // Then
         // Just only verify the invocation on delete method was done
@@ -94,9 +94,7 @@ class UserServiceTest {
 
         // Check whether the implementation works properly
         System.out.println("Amount of users: " + getResult.size());
-        getResult.forEach(userDTO -> {
-            System.out.println(userDTO.toString());
-        });
+        getResult.forEach(userDTO -> System.out.println(userDTO.toString()));
         assertThat(getResult.size()).isGreaterThan(0);
     }
 
@@ -113,9 +111,8 @@ class UserServiceTest {
         );
 
         Set<User> temp = new HashSet<>();
-        Long userId = 1L;
         User testUser = new User(
-                userId,
+                0L,
                 "Tri Lai",
                 "trilai",
                 "123456",
@@ -279,7 +276,7 @@ class UserServiceTest {
         userRepository.save(testUser);
 
         System.out.println("Before editUser method called: ");
-        System.out.println(testUser.toString());
+        System.out.println(testUser);
 
         EntityManager entityManager = null;
 
@@ -299,12 +296,50 @@ class UserServiceTest {
         assertThat(userRepository.findById(userId).get()).isEqualTo(testUser);
 
         System.out.println("After editUser method called: ");
-        System.out.println(testUser.toString());
+        System.out.println(testUser);
     }
 
     @Test
-    @Disabled("Not test yet")
-    void deleteUserById() {
+    @DisplayName("Test delete user by their ID")
+    void should_Delete_User_By_Id() {
+        // Given
+        Set<Workspace> workspaces = new HashSet<>();
+        Workspace testWorkspace = new Workspace(
+                4L,
+                "Onyx Test",
+                null,
+                null
+        );
+
+        Set<User> userSet = new HashSet<>();
+        User testUser = new User(
+                1L,
+                "Tri Lai",
+                "trilai",
+                "123456",
+                null
+        );
+
+        userSet.add(testUser);
+        testWorkspace.setUsers(userSet);
+        workspaces.add(testWorkspace);
+        testUser.setWorkspaces(workspaces);
+        userRepository.save(testUser);
+
+        // Assume the userRepository return the user
+        given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
+
+        // Assume the workspaceRepository return the workspace
+//        List<Workspace> workspaceList = new ArrayList<>();
+//        workspaceList.add(testWorkspace);
+//        given(workspaceRepository.findAll()).willReturn(workspaceList);
+
+        // When
+        userService.deleteUserById(testUser.getUserId());
+
+        // Then
+        assertThat(testUser.getWorkspaces()).isEmpty();
+        verify(userRepository).deleteById(testUser.getUserId());
     }
 
     @Test

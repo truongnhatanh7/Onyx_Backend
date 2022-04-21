@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -143,6 +144,7 @@ class TaskServiceTest {
                 3,
                 0,
                 "Edit my recorded weejo and later render it",
+                LocalDate.now(),
                 null
         );
 
@@ -185,6 +187,7 @@ class TaskServiceTest {
                 3,
                 0,
                 "Edit my recorded weejo and later render it",
+                LocalDate.now(),
                 null
         );
         Set<Task> tasks = new HashSet<>();
@@ -245,6 +248,7 @@ class TaskServiceTest {
                 3,
                 0,
                 "Edit my recorded weejo and later render it",
+                LocalDate.now(),
                 null
         );
 
@@ -267,6 +271,7 @@ class TaskServiceTest {
                 3,
                 0,
                 "Edit my recorded weejo and later render it",
+                LocalDate.now(),
                 null
         );
 
@@ -290,6 +295,7 @@ class TaskServiceTest {
                 3,
                 0,
                 "Edit my recorded weejo and later render it",
+                LocalDate.now(),
                 null
         );
 

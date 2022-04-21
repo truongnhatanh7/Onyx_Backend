@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDate;
 import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,6 +74,7 @@ class TaskRepositoryTest {
                 0,
                 0,
                 "Check if the system can delete the task when provide its id",
+                LocalDate.now(),
                 workspaceList
         );
 
@@ -81,6 +84,7 @@ class TaskRepositoryTest {
                 1,
                 0,
                 "Check foo",
+                LocalDate.now(),
                 workspaceList
         );
         taskSet.add(task1);

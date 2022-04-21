@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -75,6 +76,7 @@ class UserRepositoryTest {
                 0,
                 0,
                 "Check if the system can delete the task when provide its id",
+                LocalDate.now(),
                 workspaceList
         );
 
@@ -84,6 +86,7 @@ class UserRepositoryTest {
                 1,
                 0,
                 "Check foo",
+                LocalDate.now(),
                 workspaceList
         );
         taskSet.add(task1);
