@@ -8,18 +8,15 @@ import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -29,6 +26,8 @@ public class UserService {
     private WorkspaceRepository workspaceRepository;
     private WorkspaceListRepository workspaceListRepository;
     private TaskRepository taskRepository;
+    @Autowired
+    public JavaMailSender emailSender;
     @PersistenceContext
     private EntityManager entityManager;
 
