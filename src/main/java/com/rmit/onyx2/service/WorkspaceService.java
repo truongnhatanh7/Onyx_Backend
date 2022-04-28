@@ -54,11 +54,8 @@ public class WorkspaceService {
     public void deleteWorkspaceById(Long workspaceId) {
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
         if (workspace.isPresent()) {
-
             for (User user : userRepository.findAll()) {
-                user.getWorkspaces().stream()
-                        .filter(w -> w.getWorkspaceId().equals(workspaceId))
-                        .forEach(w -> user.getWorkspaces().remove(w));
+                user.getWorkspaces().removeIf(w -> w.getWorkspaceId().equals(workspaceId));
             }
 
             workspace.get().getUsers().clear();
@@ -85,7 +82,7 @@ public class WorkspaceService {
         query.setParameter("title",workSpace.getWorkspaceTitle());
         query.setParameter("id",workSpace.getWorkspaceId());
         entityManager.flush();
-        Integer result = query.executeUpdate();
+        int result = query.executeUpdate();
         if (result != 0) {
             return ResponseEntity.ok().build();
         }
@@ -108,9 +105,6 @@ public class WorkspaceService {
 
     public WorkspaceDTO getWorkspaceById(Long workspaceId) {
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
-        if (workspace.isPresent()) {
-            return new WorkspaceDTO(workspace.get());
-        }
-        return new WorkspaceDTO();
+        return workspace.map(WorkspaceDTO::new).orElseGet(WorkspaceDTO::new);
     }
 }
