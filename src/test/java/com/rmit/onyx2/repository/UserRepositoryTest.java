@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,7 +24,7 @@ class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-    private Set<Workspace> workspaceSet = new HashSet<>();
+    private List<Workspace> workspaceSet = new ArrayList<>();
     private Set<WorkspaceList> workspaceLists = new HashSet<>();
     private Set<User> userSet = new HashSet<>();
     private Set<Task> taskSet = new HashSet<>();

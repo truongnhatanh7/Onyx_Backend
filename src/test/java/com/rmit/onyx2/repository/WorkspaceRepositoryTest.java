@@ -24,7 +24,7 @@ class WorkspaceRepositoryTest {
     void setUp() {
         Set<User> userSet = new HashSet<>();
         Set<WorkspaceList> listSet = new HashSet<>();
-        Set<Workspace> workspaceSet = new HashSet<>();
+        List<Workspace> workspaceSet = new ArrayList<>();
 
         Workspace workspace = new Workspace(1L, "Backend test", null, null);
         User user = new User(

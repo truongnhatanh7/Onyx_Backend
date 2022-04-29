@@ -15,10 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -43,7 +40,7 @@ class WorkspaceListServiceTest {
 
     private final Set<Task> taskSet = new HashSet<>();
     private final Set<WorkspaceList> listSet = new HashSet<>();
-    private final Set<Workspace> workspaceSet = new HashSet<>();
+    private final List<Workspace> workspaceSet = new ArrayList<>();
     private final Set<User> userSet = new HashSet<>();
     private WorkspaceList workspaceList;
     private Workspace workspace;

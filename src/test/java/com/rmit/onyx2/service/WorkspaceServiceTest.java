@@ -38,7 +38,7 @@ class WorkspaceServiceTest {
     void setUp() {
         Set<User> userSet = new HashSet<>();
         Set<WorkspaceList> listSet = new HashSet<>();
-        Set<Workspace> workspaceSet = new HashSet<>();
+        List<Workspace> workspaceSet = new ArrayList<>();
         Set<Task> taskSet = new HashSet<>();
 
         workspace = new Workspace(1L, "Backend test", null, null);

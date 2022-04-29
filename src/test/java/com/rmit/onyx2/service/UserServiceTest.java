@@ -42,7 +42,7 @@ class UserServiceTest {
         // Given
         List<User> temp = new ArrayList<>();
         List<UserDTO> getResult = new ArrayList<>();
-        Set<Workspace> workspaces = new HashSet<>();
+        List<Workspace> workspaces = new ArrayList<>();
         Workspace workspace = new Workspace(
                 4L,
                 "Onyx Test",
@@ -100,7 +100,7 @@ class UserServiceTest {
     @DisplayName("Return UserDTO with newly added User")
     void should_Add_User_Successfully() {
         // Given
-        Set<Workspace> workspaces = new HashSet<>();
+        List<Workspace> workspaces = new ArrayList<>();
         Workspace workspace = new Workspace(
                 4L,
                 "Onyx Test",
@@ -144,7 +144,7 @@ class UserServiceTest {
     @DisplayName("Return the bad request when workspace is not found in Workspace Repos")
     void test_Add_Non_Exist_Workspace_For_UserById() {
         // Given
-        Set<Workspace> workspaces = new HashSet<>();
+        List<Workspace> workspaces = new ArrayList<>();
         Workspace testWorkspace = new Workspace(
                 0L,
                 "FrontEnd Test",
@@ -181,7 +181,7 @@ class UserServiceTest {
     @DisplayName("Return the bad request when user is not found in User Repos")
     void test_Add_Workspace_For_Non_Exist_UserId() {
         // Given
-        Set<Workspace> workspaces = new HashSet<>();
+        List<Workspace> workspaces = new ArrayList<>();
         Workspace testWorkspace = new Workspace(
                 0L,
                 "FrontEnd Test",
@@ -218,7 +218,7 @@ class UserServiceTest {
     @DisplayName("Return the ok request as adding workspace successfully")
     void should_Add_Workspace_For_UserById() {
         // Given
-        Set<Workspace> workspaces = new HashSet<>();
+        List<Workspace> workspaces = new ArrayList<>();
         Workspace testWorkspace = new Workspace(
                 4L,
                 "Onyx Test",
@@ -258,7 +258,7 @@ class UserServiceTest {
     @DisplayName("Should delete user by their ID")
     void should_Delete_User_By_Id() {
         // Given
-        Set<Workspace> workspaces = new HashSet<>();
+        List<Workspace> workspaces = new ArrayList<>();
         Workspace testWorkspace = new Workspace(
                 4L,
                 "Onyx Test",
@@ -307,7 +307,7 @@ class UserServiceTest {
     @DisplayName("Get user by their ID successfully")
     void should_Get_User_By_Exist_Id() {
         // Given
-        Set<Workspace> workspaces = new HashSet<>();
+        List<Workspace> workspaces = new ArrayList<>();
         Workspace testWorkspace = new Workspace(
                 4L,
                 "Onyx Test",
@@ -352,7 +352,7 @@ class UserServiceTest {
     @DisplayName("Get user by their ID unsuccessfully")
     void test_Get_User_By_Non_Exist_Id() {
         // Given
-        Set<Workspace> workspaces = new HashSet<>();
+        List<Workspace> workspaces = new ArrayList<>();
         Workspace testWorkspace = new Workspace(
                 4L,
                 "Onyx Test",
@@ -397,7 +397,7 @@ class UserServiceTest {
     @DisplayName("Remove User from workspace by their ID")
     void removeUserFromWorkspaceById() {
         // Given
-        Set<Workspace> workspaces = new HashSet<>();
+        List<Workspace> workspaces = new ArrayList<>();
         Workspace testWorkspace = new Workspace(
                 1L,
                 "Onyx Test",
