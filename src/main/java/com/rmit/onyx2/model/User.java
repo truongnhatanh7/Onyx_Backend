@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +45,7 @@ public class User {
     )
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Workspace> workspaces = new HashSet<>();
+    private List<Workspace> workspaces = new ArrayList<>();
 
     public void addWorkspace(Workspace workspace) {
         this.workspaces.add(workspace);
