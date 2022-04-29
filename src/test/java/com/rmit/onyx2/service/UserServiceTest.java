@@ -3,10 +3,8 @@ package com.rmit.onyx2.service;
 import com.rmit.onyx2.model.User;
 import com.rmit.onyx2.model.UserDTO;
 import com.rmit.onyx2.model.Workspace;
-import com.rmit.onyx2.model.WorkspaceList;
 import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,14 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = UserServiceTest.class)
@@ -93,14 +90,15 @@ class UserServiceTest {
         verify(userRepository).findAll();
 
         // Check whether the implementation works properly
+        System.out.println("Test case passed");
         System.out.println("Amount of users: " + getResult.size());
         getResult.forEach(userDTO -> System.out.println(userDTO.toString()));
         assertThat(getResult.size()).isGreaterThan(0);
     }
 
     @Test
-    @DisplayName("Test add user")
-    void should_Add_User() {
+    @DisplayName("Return UserDTO with newly added User")
+    void should_Add_User_Successfully() {
         // Given
         Set<Workspace> workspaces = new HashSet<>();
         Workspace workspace = new Workspace(
@@ -124,6 +122,11 @@ class UserServiceTest {
         workspaces.add(workspace);
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+
+        // Assume that userRepository have saved new user successfully
+        given(userRepository.save(testUser)).willReturn(testUser);
+
+        // Assume that newly added user is found in User Repo
         given(userRepository.findById(testUser.getUserId()))
                 .willReturn(Optional.of(testUser));
 
@@ -133,11 +136,12 @@ class UserServiceTest {
         // Then
         verify(userRepository).save(userArgumentCaptor.capture());
         assertThat(userArgumentCaptor.getValue()).isEqualTo(testUser);
-        System.out.println(userArgumentCaptor.getValue().toString());
+        System.out.println("Test case passed: Add new user successfully");
+        System.out.println("Parameter when save() is invoked: " + userArgumentCaptor.getValue().toString());
     }
 
     @Test
-    @DisplayName("The addWorkspaceForUserById() returns the bad request when workspace does not present in workspaceRepository")
+    @DisplayName("Return the bad request when workspace is not found in Workspace Repos")
     void test_Add_Non_Exist_Workspace_For_UserById() {
         // Given
         Set<Workspace> workspaces = new HashSet<>();
@@ -170,10 +174,11 @@ class UserServiceTest {
 
         // Then
         assertThat(userRepository.findAll().size()).isEqualTo(0);
+        System.out.println("Test case passed: Add non-exist workspace to exist user");
     }
 
     @Test
-    @DisplayName("addWorkspaceForUserById() returns the bad request when user does not present in userRepository")
+    @DisplayName("Return the bad request when user is not found in User Repos")
     void test_Add_Workspace_For_Non_Exist_UserId() {
         // Given
         Set<Workspace> workspaces = new HashSet<>();
@@ -206,10 +211,11 @@ class UserServiceTest {
 
         // Then
         assertThat(userRepository.findAll().size()).isEqualTo(0);
+        System.out.println("Test case passed: Add exist workspace to non-exist user");
     }
 
     @Test
-    @DisplayName("Test the addWorkspaceForUserById() will return the successful/ ok request (status code = 200)")
+    @DisplayName("Return the ok request as adding workspace successfully")
     void should_Add_Workspace_For_UserById() {
         // Given
         Set<Workspace> workspaces = new HashSet<>();
@@ -245,62 +251,11 @@ class UserServiceTest {
         // Then
         verify(userRepository).save(userArgumentCaptor.capture());
         assertThat(userArgumentCaptor.getValue()).isEqualTo(testUser);
+        System.out.println("Test case passed: Add exist workspace to exist user");
     }
 
     @Test
-    @Disabled("Still testing")
-    void editUser() {
-        // Given
-        Set<Workspace> workspaces = new HashSet<>();
-        Workspace testWorkspace = new Workspace(
-                4L,
-                "Onyx Test",
-                null,
-                null
-        );
-
-        Set<User> userSet = new HashSet<>();
-        Long userId = 1L;
-        User testUser = new User(
-                userId,
-                "Tri Lai",
-                "trilai",
-                "123456",
-                workspaces
-        );
-
-        userSet.add(testUser);
-        testWorkspace.setUsers(userSet);
-        workspaces.add(testWorkspace);
-
-        userRepository.save(testUser);
-
-        System.out.println("Before editUser method called: ");
-        System.out.println(testUser);
-
-        EntityManager entityManager = null;
-
-        String hsql = "update User u set u.name =:name, u.username =:user_name, u.password =:password where u.userId =: userId";
-        Query query = entityManager.createQuery(hsql);
-
-        // When
-        testUser.setName("John Doe");
-        testUser.setUsername("johndoe");
-        testUser.setPassword("x-wing");
-
-        when(entityManager.createQuery(hsql)).thenReturn(query);
-
-        userService.editUser(testUser);
-
-        // Then
-        assertThat(userRepository.findById(userId).get()).isEqualTo(testUser);
-
-        System.out.println("After editUser method called: ");
-        System.out.println(testUser);
-    }
-
-    @Test
-    @DisplayName("Test delete user by their ID")
+    @DisplayName("Should delete user by their ID")
     void should_Delete_User_By_Id() {
         // Given
         Set<Workspace> workspaces = new HashSet<>();
@@ -333,8 +288,14 @@ class UserServiceTest {
 //        List<Workspace> workspaceList = new ArrayList<>();
 //        workspaceList.add(testWorkspace);
 //        given(workspaceRepository.findAll()).willReturn(workspaceList);
-
+//
         // When
+//        try {
+//            userService.deleteUserById(testUser.getUserId());
+//        } catch (Exception exception) {
+//            verify(workspaceService).deleteWorkspaceById(testWorkspace.getWorkspaceId());
+//        }
+
         userService.deleteUserById(testUser.getUserId());
 
         // Then
@@ -433,7 +394,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Remove User successfully from workspace by their ID")
+    @DisplayName("Remove User from workspace by their ID")
     void removeUserFromWorkspaceById() {
         // Given
         Set<Workspace> workspaces = new HashSet<>();
@@ -468,6 +429,6 @@ class UserServiceTest {
 
         // Then
         verify(workspaceRepository).save(testWorkspace);
-        verify(workspaceRepository).save(testWorkspace);
+        System.out.println("Test case passed: Remove user out of workspace successfully");
     }
 }
