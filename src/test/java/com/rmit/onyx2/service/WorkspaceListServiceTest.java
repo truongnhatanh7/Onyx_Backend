@@ -11,12 +11,9 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.annotation.Rollback;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -45,10 +41,10 @@ class WorkspaceListServiceTest {
     @InjectMocks
     private WorkspaceListService workspaceListService;
 
-    private Set<Task> taskSet = new HashSet<>();
-    private Set<WorkspaceList> listSet = new HashSet<>();
-    private Set<Workspace> workspaceSet = new HashSet<>();
-    private Set<User> userSet = new HashSet<>();
+    private final Set<Task> taskSet = new HashSet<>();
+    private final Set<WorkspaceList> listSet = new HashSet<>();
+    private final Set<Workspace> workspaceSet = new HashSet<>();
+    private final Set<User> userSet = new HashSet<>();
     private WorkspaceList workspaceList;
     private Workspace workspace;
 
@@ -93,7 +89,7 @@ class WorkspaceListServiceTest {
         assertEquals(workspace.getWorkspaceLists().size(),
                 workspaceListService.getWorkspaceListByWorkspaceId(workspace.getWorkspaceId()).size());
 
-        System.out.println("SUCCESS: List of Workspace Lists: ");
+        System.out.println("Test case passed: List of Workspace Lists: ");
         workspace.getWorkspaceLists().forEach(workspaceList -> System.out.println(workspaceList.toString()));
     }
 
@@ -105,7 +101,7 @@ class WorkspaceListServiceTest {
         given(workspaceRepository.findById(workspace.getWorkspaceId())).willReturn(Optional.empty());
 
         assertNull(workspaceListService.getWorkspaceListByWorkspaceId(workspace.getWorkspaceId()));
-        System.out.println("ERROR: No WorkspaceList found in workspace " + workspace.getWorkspaceTitle());
+        System.out.println("Test case passed: No WorkspaceList found in workspace " + workspace.getWorkspaceTitle());
     }
 
     @Test
@@ -117,7 +113,7 @@ class WorkspaceListServiceTest {
         given(workspaceListRepository.findAll()).willReturn(new ArrayList<>(listSet));
         workspaceListService.addWorkspaceListByWorkspaceId(workspace.getWorkspaceId(), workspaceList);
         verify(workspaceListRepository).save(workspaceList);
-        System.out.println("SUCCESS: The WorkspaceList \"" + workspaceList.getName() + "\" has been added to " + workspace.getWorkspaceTitle());
+        System.out.println("Test case passed: The WorkspaceList \"" + workspaceList.getName() + "\" has been added to " + workspace.getWorkspaceTitle());
     }
 
     @Test
@@ -128,7 +124,7 @@ class WorkspaceListServiceTest {
         given(workspaceListRepository.findAll()).willReturn(new ArrayList<>());
         workspaceListService.addWorkspaceListByWorkspaceId(workspace.getWorkspaceId(), workspaceList);
         verify(workspaceListRepository).save(workspaceList);
-        System.out.println("ERROR: The WorkspaceListRepository contains no WorkspaceList objects!");
+        System.out.println("Test case passed: The WorkspaceListRepository contains no WorkspaceList objects!");
     }
 
     @Test
@@ -137,30 +133,17 @@ class WorkspaceListServiceTest {
     void test_Add_List_By_WorkspaceId_Which_Not_Present() {
         given(workspaceRepository.findById(workspace.getWorkspaceId())).willReturn(Optional.empty());
         workspaceListService.addWorkspaceListByWorkspaceId(workspace.getWorkspaceId(), workspaceList);
-        System.out.println("ERROR: The provided workspaceId " + workspace.getWorkspaceId() + " does not exist!");
-    }
-
-    @Test
-    @Disabled("Not finished yet")
-    void editWorkspaceList() {
-        String hsql = "update WorkspaceList w set w.name =:nameList where w.listId =: listId and w.workspace.workspaceId =: workspaceId";
-        EntityManager em = Mockito.mock(EntityManager.class);
-        Query query = Mockito.mock(Query.class);
-
-        when(query.getFirstResult()).thenReturn(1);
-        when(em.createQuery(hsql)).thenReturn(query);
-
-        Integer expectedRes = workspaceListService.editWorkspaceList(workspaceList, workspace.getWorkspaceId());
-        assertEquals(expectedRes, 1);
+        System.out.println("Test case passed: The provided workspaceId " + workspace.getWorkspaceId() + " does not exist!");
     }
 
     @Test
     @Order(7)
     @Rollback(value = false)
-    void deleteWorkspaceListById() {
+    @DisplayName("Should delete WorkspaceList with given its id")
+    void should_Delete_WorkspaceList_By_Id() {
         given(workspaceListRepository.findById(workspaceList.getListId())).willReturn(Optional.of(workspaceList));
         workspaceListService.deleteWorkspaceListById(workspaceList.getListId());
         verify(workspaceListRepository).deleteById(workspaceList.getListId());
-        System.out.println("SUCCESS: The WorkspaceList \"" + workspaceList.getName() + "\" has been removed from " + workspace.getWorkspaceTitle());
+        System.out.println("Test case passed: The WorkspaceList \"" + workspaceList.getName() + "\" has been removed from " + workspace.getWorkspaceTitle());
     }
 }
