@@ -25,7 +25,7 @@ class TaskRepositoryTest {
     @Autowired
     private TaskRepository taskRepository;
 
-    private Set<Workspace> workspaceSet = new HashSet<>();
+    private List<Workspace> workspaceSet = new ArrayList<>();
     private Set<WorkspaceList> workspaceLists = new HashSet<>();
     private Set<User> userSet = new HashSet<>();
     private Set<Task> taskSet = new HashSet<Task>();
