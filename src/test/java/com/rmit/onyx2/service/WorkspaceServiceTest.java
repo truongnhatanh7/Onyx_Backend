@@ -1,9 +1,7 @@
 package com.rmit.onyx2.service;
 
 import com.rmit.onyx2.model.*;
-import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.UserRepository;
-import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -32,17 +29,8 @@ class WorkspaceServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private TaskRepository taskRepository;
-
-    @Mock
-    private WorkspaceListRepository workspaceListRepository;
-
     @InjectMocks
     private WorkspaceService workspaceService;
-
-    @Mock
-    EntityManager em;
 
     private Workspace workspace;
 
@@ -168,21 +156,6 @@ class WorkspaceServiceTest {
         verify(workspaceRepository).deleteById(workspace.getWorkspaceId());
         assertEquals(testUser.getWorkspaces().size(), 0);
         assertEquals(workspaceRepository.findAll().size(), 0);
-    }
-
-    @Test
-    @DisplayName("Should edit the workspace")
-    @Disabled("Still struggling with Entity Manager")
-    void editWorkspace() {
-
-        String hsql = "update Workspace w set w.workspaceTitle =: title where w.workspaceId =: id";
-        workspaceRepository.save(workspace);
-
-        Workspace expectedWorkspace = new Workspace(2L, "Front-end test", null, null);
-
-
-        workspaceService.editWorkspace(expectedWorkspace);
-        assertThat(workspace.getWorkspaceTitle()).isEqualTo(expectedWorkspace.getWorkspaceTitle());
     }
 
     @Test
