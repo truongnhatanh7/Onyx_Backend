@@ -93,6 +93,10 @@ class WorkspaceServiceTest {
 
     @AfterEach
     void tearDown() {
+        taskRepository.deleteAll();
+        userRepository.deleteAll();
+        workspaceRepository.deleteAll();
+        workspaceListRepository.deleteAll();
     }
 
     @Test
@@ -104,8 +108,9 @@ class WorkspaceServiceTest {
         given(workspaceRepository.findAll()).willReturn(workspaceList);
         workspaceList.forEach(w -> expected.add(new WorkspaceDTO(w)));
 
-        // When
+        // When & Then
         assertEquals(expected, workspaceService.getAllWorkspaces());
+        System.out.println("Test case passed: List of workspaces: " + expected.size());
     }
 
     @Test
@@ -124,7 +129,7 @@ class WorkspaceServiceTest {
         // Then
         verify(workspaceRepository).findAll();
         assertThat(expected.size()).isGreaterThan(0);
-        System.out.println("est case passed: List of workspaces: ");
+        System.out.println("Test case passed: List of workspaces: ");
         expected.forEach(System.out::println);
     }
 

@@ -86,7 +86,7 @@ class UserServiceTest {
         temp.forEach(user -> getResult.add(new UserDTO(user)));
 
         // Then
-        // Just only verify the invocation on delete method was done
+        // Just only verify the invocation on findAll() method was done
         verify(userRepository).findAll();
 
         // Check whether the implementation works properly

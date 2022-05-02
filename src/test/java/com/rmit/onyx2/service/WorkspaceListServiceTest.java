@@ -76,6 +76,13 @@ class WorkspaceListServiceTest {
         workspace.setUsers(userSet);
     }
 
+    @AfterEach
+    void tearDown() {
+        workspaceRepository.deleteAll();
+        workspaceListRepository.deleteAll();
+        taskRepository.deleteAll();
+    }
+
     @Test
     @Order(4)
     @Rollback(value = false)
