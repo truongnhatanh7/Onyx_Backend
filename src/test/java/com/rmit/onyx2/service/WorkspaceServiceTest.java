@@ -1,7 +1,9 @@
 package com.rmit.onyx2.service;
 
 import com.rmit.onyx2.model.*;
+import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.UserRepository;
+import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +30,12 @@ class WorkspaceServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private TaskRepository taskRepository;
+
+    @Mock
+    private WorkspaceListRepository workspaceListRepository;
 
     @InjectMocks
     private WorkspaceService workspaceService;
