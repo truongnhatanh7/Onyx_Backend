@@ -95,18 +95,19 @@ public class UserService {
 //                    .filter(w -> w.getUsers().size() == 1)
 //                    .forEach(w -> workspaceService.deleteWorkspaceById(w.getWorkspaceId()));
             user.get().getWorkspaces().clear();
+            userRepository.flush();
 
             // Remove user in workspaces
-            for (Workspace workspace : workspaceRepository.findAll()) {
-                workspace.getUsers().stream()
-                        .filter(u -> u.getUserId().equals(userId))
-                        .forEach(u -> {
-                            workspace.getUsers().remove(u);
-                            if (workspace.getUsers().isEmpty()) {
-                                workspaceService.deleteWorkspaceById(workspace.getWorkspaceId());
-                            }
-                        });
-            }
+//            for (Workspace workspace : workspaceRepository.findAll()) {
+//                workspace.getUsers().stream()
+//                        .filter(u -> u.getUserId().equals(userId))
+//                        .forEach(u -> {
+//                            workspace.getUsers().remove(u);
+//                            if (workspace.getUsers().isEmpty()) {
+//                                workspaceService.deleteWorkspaceById(workspace.getWorkspaceId());
+//                            }
+//                        });
+//            }
             userRepository.deleteById(userId);
         }
     }
@@ -126,6 +127,22 @@ public class UserService {
             workspace.get().getUsers().remove(user.get());
             user.get().getWorkspaces().remove(workspace.get());
             workspaceRepository.save(workspace.get());
+            userRepository.save(user.get());
+        }
+    }
+
+    public void editPassword(Long userId, String newPassword) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            user.get().setPassword(newPassword);
+            userRepository.save(user.get());
+        }
+    }
+
+    public void editUsername(Long userId, String newUsername) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            user.get().setUsername(newUsername);
             userRepository.save(user.get());
         }
     }
