@@ -20,7 +20,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -28,17 +28,6 @@ public class UserController {
     }
 
     @GetMapping("/all-users/")
-//    @Operation(
-//            summary = "Get All user",
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "Return a list of  user",
-//                            content = @Content(mediaType = "application/json",
-//                                    schema = @Schema(implementation = UserDTO.class))),
-//                    @ApiResponse(responseCode = "400", description = "null",
-//                            content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = ObjectUtils.Null.class))
-//                    )}
-//    )
     public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
     }
