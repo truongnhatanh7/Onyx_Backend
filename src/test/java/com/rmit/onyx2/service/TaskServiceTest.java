@@ -90,11 +90,12 @@ class TaskServiceTest {
 
         // When
         taskService.addTaskByListId(listId, newTask);
-        System.out.println(taskListSize.size());
 
         // Then
         verify(taskRepository).save(taskArgumentCaptor.capture());
+        verify(taskRepository).findAll();
         assertThat(taskArgumentCaptor.getValue()).isEqualTo(newTask);
+        System.out.println("Test case passed: Add new Task with given ListID successfully");
     }
 
     @Test
@@ -131,6 +132,7 @@ class TaskServiceTest {
 
         // Then
         verify(taskRepository).save(taskArgumentCaptor.capture());
+        verify(taskRepository).findAll();
         assertThat(taskArgumentCaptor.getValue()).isEqualTo(newTask);
     }
 

@@ -395,7 +395,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Remove User from workspace by their ID")
-    void removeUserFromWorkspaceById() {
+    void should_Remove_User_From_Workspace_By_Id() {
         // Given
         List<Workspace> workspaces = new ArrayList<>();
         Workspace testWorkspace = new Workspace(
