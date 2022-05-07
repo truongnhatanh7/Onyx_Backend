@@ -3,12 +3,8 @@ package com.rmit.onyx2.controller;
 import com.rmit.onyx2.model.User;
 import com.rmit.onyx2.model.UserDTO;
 import com.rmit.onyx2.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +43,11 @@ public class UserController {
         return userService.editUser(user);
     }
 
+    @PatchMapping("/edit-name/{userId}/{newName}")
+    public void editName(@PathVariable(name = "userId") Long userId, @PathVariable(name = "newName") String newName) {
+        userService.editName(userId, newName);
+    }
+
     @PatchMapping("/edit-password/{userId}/{newPassword}")
     public void editPassword(@PathVariable(name = "userId") Long userId, @PathVariable(name = "newPassword") String newPassword) {
         userService.editPassword(userId, newPassword);
@@ -55,6 +56,11 @@ public class UserController {
     @PatchMapping("/edit-username/{userId}/{newUsername}")
     public void editUsername(@PathVariable(name = "userId") Long userId, @PathVariable(name = "newUsername") String newUsername) {
         userService.editUsername(userId, newUsername);
+    }
+
+    @PatchMapping(path = "/edit-avatar")
+    public void editAvatarURL(@RequestParam(name = "userId") Long userId, @RequestParam(name = "avatar") String newAvatarURL) {
+        userService.editAvatarURL(userId, newAvatarURL);
     }
 
     @PostMapping("/add-workspace-for-user-by-id/{workspaceId}/{userId}")
