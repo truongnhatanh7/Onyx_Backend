@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/email")
 @CrossOrigin(origins = "*")
 public class EmailController {
-    private EmailService emailService;
+    private final EmailService emailService;
 
     @Autowired
     public EmailController(EmailService emailService) {
@@ -18,6 +18,5 @@ public class EmailController {
     @PostMapping("/notifyUser/{userEmail}")
     public void sendEmail(@PathVariable String userEmail) {
         emailService.sendSimpleEmail(userEmail);
-
     }
 }
