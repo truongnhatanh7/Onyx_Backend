@@ -51,6 +51,16 @@ public class WorkspaceController {
         return workspaceService.editWorkspace(workspace);
     }
 
+    @PatchMapping("/edit-owner/{workspaceId}/{userId}")
+    public void editOwner(@PathVariable(name = "workspaceId") Long workspaceId,@PathVariable(name = "userId") Long userId) {
+        workspaceService.editOwner(workspaceId, userId);
+    }
+
+    @GetMapping("/get-owner/{workspaceId}")
+    public Long getOwnerId(@PathVariable(name = "workspaceId") Long workspaceId) {
+        return workspaceService.getOwnerId(workspaceId);
+    }
+
     @DeleteMapping("/delete-workspace/{workspaceId}")
     public void deleteWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId) {
         workspaceService.deleteWorkspaceById(workspaceId);

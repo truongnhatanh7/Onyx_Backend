@@ -15,6 +15,7 @@ public class UserDTO {
     private String name;
     private String username;
     private String password;
+    private String avatarURL;
     private List<WorkspaceDTO> workspaces = new ArrayList<>();
 
     public UserDTO(User user) {
@@ -22,6 +23,7 @@ public class UserDTO {
         this.name = user.getName();
         this.username = user.getUsername();
         this.password = user.getPassword();
+        this.avatarURL = user.getAvatarURL();
 
         for (Workspace workspace : user.getWorkspaces()) {
             WorkspaceDTO temp = new WorkspaceDTO();

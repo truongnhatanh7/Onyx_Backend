@@ -23,6 +23,9 @@ public class Workspace {
     @Column(name = "workspace_title")
     private String workspaceTitle;
 
+    @Column(name = "owner_id")
+    private Long ownerId;
+
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "workspaces", fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

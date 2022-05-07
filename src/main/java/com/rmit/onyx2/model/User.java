@@ -32,6 +32,8 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "avatarURL")
+    private String avatarURL = "";
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(

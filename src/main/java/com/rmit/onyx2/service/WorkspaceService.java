@@ -107,4 +107,20 @@ public class WorkspaceService {
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
         return workspace.map(WorkspaceDTO::new).orElseGet(WorkspaceDTO::new);
     }
+
+    public void editOwner(Long workspaceId, Long userId) {
+        Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
+        if (workspace.isPresent()) {
+            workspace.get().setOwnerId(userId);
+            workspaceRepository.save(workspace.get());
+        }
+    }
+
+    public Long getOwnerId(Long workspaceId) {
+        Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
+        if (workspace.isPresent()) {
+            return workspace.get().getOwnerId();
+        }
+        return -1L;
+    }
 }

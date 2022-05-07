@@ -22,10 +22,10 @@ import java.util.*;
 public class UserService {
 
 
-    private UserRepository userRepository;
-    private WorkspaceRepository workspaceRepository;
-    private WorkspaceListRepository workspaceListRepository;
-    private TaskRepository taskRepository;
+    private final UserRepository userRepository;
+    private final WorkspaceRepository workspaceRepository;
+    private final WorkspaceListRepository workspaceListRepository;
+    private final TaskRepository taskRepository;
     @Autowired
     public JavaMailSender emailSender;
     @PersistenceContext
@@ -114,10 +114,7 @@ public class UserService {
 
     public UserDTO getUserById(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            return new UserDTO(user.get());
-        }
-        return new UserDTO();
+        return user.map(UserDTO::new).orElseGet(UserDTO::new);
     }
 
     public void removeUserFromWorkspaceById(Long workspaceId, Long userId) {
@@ -143,6 +140,22 @@ public class UserService {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             user.get().setUsername(newUsername);
+            userRepository.save(user.get());
+        }
+    }
+
+    public void editName(Long userId, String newName) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            user.get().setName(newName);
+            userRepository.save(user.get());
+        }
+    }
+
+    public void editAvatarURL(Long userId, String newAvatarURL) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            user.get().setAvatarURL(newAvatarURL);
             userRepository.save(user.get());
         }
     }
