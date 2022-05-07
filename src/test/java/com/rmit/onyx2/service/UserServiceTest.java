@@ -5,6 +5,8 @@ import com.rmit.onyx2.model.UserDTO;
 import com.rmit.onyx2.model.Workspace;
 import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,20 +38,52 @@ class UserServiceTest {
     @InjectMocks
     UserService userService;
 
+    // Create sample test data
+    List<Workspace> workspaces;
+    Workspace testWorkspace;
+    Set<User> userSet;
+    User testUser;
+
+    // Configure sample test data
+    @BeforeEach
+    void setUp() {
+        workspaces = new ArrayList<>();
+        testWorkspace = new Workspace(
+                4L,
+                "Onyx Test",
+                null,
+                null
+        );
+
+        userSet = new HashSet<>();
+
+        testUser = new User(
+                0L,
+                "Tri Lai",
+                "trilai",
+                "123456",
+                workspaces
+        );
+        userSet.add(testUser);
+        testWorkspace.setUsers(userSet);
+        workspaces.add(testWorkspace);
+    }
+
+    // Clear all the test variables
+    @AfterEach
+    void tearDown() {
+        workspaces = null;
+        testWorkspace = null;
+        userSet = null;
+        testUser = null;
+    }
+
     @Test
     @DisplayName("Get all users successfully")
     void should_Get_All_Users() {
         // Given
         List<User> temp = new ArrayList<>();
         List<UserDTO> getResult = new ArrayList<>();
-        List<Workspace> workspaces = new ArrayList<>();
-        Workspace workspace = new Workspace(
-                4L,
-                "Onyx Test",
-                null,
-                null
-        );
-        workspaces.add(workspace);
 
         User user1 = new User(
                 1L,
@@ -90,7 +124,7 @@ class UserServiceTest {
         verify(userRepository).findAll();
 
         // Check whether the implementation works properly
-        System.out.println("Test case passed");
+        System.out.println("Test case passed: Get all users in UserRepository");
         System.out.println("Amount of users: " + getResult.size());
         getResult.forEach(userDTO -> System.out.println(userDTO.toString()));
         assertThat(getResult.size()).isGreaterThan(0);
@@ -100,27 +134,6 @@ class UserServiceTest {
     @DisplayName("Return UserDTO with newly added User")
     void should_Add_User_Successfully() {
         // Given
-        List<Workspace> workspaces = new ArrayList<>();
-        Workspace workspace = new Workspace(
-                4L,
-                "Onyx Test",
-                null,
-                null
-        );
-
-        Set<User> temp = new HashSet<>();
-        User testUser = new User(
-                0L,
-                "Tri Lai",
-                "trilai",
-                "123456",
-                workspaces
-        );
-        temp.add(testUser);
-
-        workspace.setUsers(temp);
-        workspaces.add(workspace);
-
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
 
         // Assume that userRepository have saved new user successfully
@@ -144,29 +157,7 @@ class UserServiceTest {
     @DisplayName("Return the bad request when workspace is not found in Workspace Repos")
     void test_Add_Non_Exist_Workspace_For_UserById() {
         // Given
-        List<Workspace> workspaces = new ArrayList<>();
-        Workspace testWorkspace = new Workspace(
-                0L,
-                "FrontEnd Test",
-                null,
-                null
-        );
-
-        Set<User> userSet = new HashSet<>();
-        Long userId = 1L;
-        User testUser = new User(
-                userId,
-                "Tri Lai",
-                "trilai",
-                "123456",
-                workspaces
-        );
-
-        userSet.add(testUser);
-        testWorkspace.setUsers(userSet);
-        workspaces.add(testWorkspace);
-
-        given(userRepository.findById(userId)).willReturn(Optional.of(testUser));
+        given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
         given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.empty());
 
         // When
@@ -181,29 +172,7 @@ class UserServiceTest {
     @DisplayName("Return the bad request when user is not found in User Repos")
     void test_Add_Workspace_For_Non_Exist_UserId() {
         // Given
-        List<Workspace> workspaces = new ArrayList<>();
-        Workspace testWorkspace = new Workspace(
-                0L,
-                "FrontEnd Test",
-                null,
-                null
-        );
-
-        Set<User> userSet = new HashSet<>();
-        Long userId = 1L;
-        User testUser = new User(
-                userId,
-                "Tri Lai",
-                "trilai",
-                "123456",
-                workspaces
-        );
-
-        userSet.add(testUser);
-        testWorkspace.setUsers(userSet);
-        workspaces.add(testWorkspace);
-
-        given(userRepository.findById(userId)).willReturn(Optional.empty());
+        given(userRepository.findById(testUser.getUserId())).willReturn(Optional.empty());
         given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.of(testWorkspace));
 
         // When
@@ -218,29 +187,7 @@ class UserServiceTest {
     @DisplayName("Return the ok request as adding workspace successfully")
     void should_Add_Workspace_For_UserById() {
         // Given
-        List<Workspace> workspaces = new ArrayList<>();
-        Workspace testWorkspace = new Workspace(
-                4L,
-                "Onyx Test",
-                null,
-                null
-        );
-
-        Set<User> userSet = new HashSet<>();
-        Long userId = 1L;
-        User testUser = new User(
-                userId,
-                "Tri Lai",
-                "trilai",
-                "123456",
-                workspaces
-        );
-
-        userSet.add(testUser);
-        testWorkspace.setUsers(userSet);
-        workspaces.add(testWorkspace);
-
-        given(userRepository.findById(userId)).willReturn(Optional.of(testUser));
+        given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
         given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.of(testWorkspace));
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -258,29 +205,8 @@ class UserServiceTest {
     @DisplayName("Should delete user by their ID")
     void should_Delete_User_By_Id() {
         // Given
-        List<Workspace> workspaces = new ArrayList<>();
-        Workspace testWorkspace = new Workspace(
-                4L,
-                "Onyx Test",
-                null,
-                null
-        );
-
-        Set<User> userSet = new HashSet<>();
-        User testUser = new User(
-                1L,
-                "Tri Lai",
-                "trilai",
-                "123456",
-                null
-        );
-
-        userSet.add(testUser);
-        testWorkspace.setUsers(userSet);
-        workspaces.add(testWorkspace);
         testUser.setWorkspaces(workspaces);
         userRepository.save(testUser);
-
         // Assume the userRepository return the user
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
 
@@ -301,34 +227,13 @@ class UserServiceTest {
         // Then
         assertThat(testUser.getWorkspaces()).isEmpty();
         verify(userRepository).deleteById(testUser.getUserId());
+        System.out.println("Test case passed: Delete user out of UserRepository");
     }
 
     @Test
     @DisplayName("Get user by their ID successfully")
     void should_Get_User_By_Exist_Id() {
         // Given
-        List<Workspace> workspaces = new ArrayList<>();
-        Workspace testWorkspace = new Workspace(
-                4L,
-                "Onyx Test",
-                null,
-                null
-        );
-
-        Set<User> userSet = new HashSet<>();
-
-        User testUser = new User(
-                0L,
-                "Tri Lai",
-                "trilai",
-                "123456",
-                workspaces
-        );
-
-        userSet.add(testUser);
-        testWorkspace.setUsers(userSet);
-        workspaces.add(testWorkspace);
-
         userRepository.save(testUser);
 
         // Assume the user is found by userId
@@ -342,6 +247,8 @@ class UserServiceTest {
         boolean exceptionThrown = true;
         try {
             UserDTO newUserDto = new UserDTO(testUser);
+            System.out.println("Test case passed: Get user with exist userId");
+            System.out.println(newUserDto);
         }catch(Exception e){
             exceptionThrown = false;
         }
@@ -352,28 +259,6 @@ class UserServiceTest {
     @DisplayName("Get user by their ID unsuccessfully")
     void test_Get_User_By_Non_Exist_Id() {
         // Given
-        List<Workspace> workspaces = new ArrayList<>();
-        Workspace testWorkspace = new Workspace(
-                4L,
-                "Onyx Test",
-                null,
-                null
-        );
-
-        Set<User> userSet = new HashSet<>();
-
-        User testUser = new User(
-                0L,
-                "Tri Lai",
-                "trilai",
-                "123456",
-                workspaces
-        );
-
-        userSet.add(testUser);
-        testWorkspace.setUsers(userSet);
-        workspaces.add(testWorkspace);
-
         userRepository.save(testUser);
 
         // Assume the user is NOT found by userId
@@ -387,6 +272,8 @@ class UserServiceTest {
         boolean exceptionThrown = true;
         try {
             UserDTO newUserDto = new UserDTO();
+            System.out.println("Test case passed: Get user with non-exist userId");
+            System.out.println(newUserDto);
         }catch(Exception e){
             exceptionThrown = false;
         }
@@ -397,38 +284,55 @@ class UserServiceTest {
     @DisplayName("Remove User from workspace by their ID")
     void should_Remove_User_From_Workspace_By_Id() {
         // Given
-        List<Workspace> workspaces = new ArrayList<>();
-        Workspace testWorkspace = new Workspace(
-                1L,
-                "Onyx Test",
-                null,
-                null
-        );
-
-        Set<User> userSet = new HashSet<>();
-        Long userId = 0L;
-        User testUser = new User(
-                userId,
-                "Tri Lai",
-                "trilai",
-                "123456",
-                workspaces
-        );
-
-        userSet.add(testUser);
-        testWorkspace.setUsers(userSet);
-        workspaces.add(testWorkspace);
-
         userRepository.save(testUser);
 
         given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.of(testWorkspace));
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
+        System.out.println("User in workspace: " + testWorkspace.getUsers().size());
 
         // When
+        System.out.println("Removing user out of workspace...");
         userService.removeUserFromWorkspaceById(testWorkspace.getWorkspaceId(), testUser.getUserId());
+        System.out.println("User with id " + testUser.getUserId() + " has been removed out of workspace");
 
         // Then
         verify(workspaceRepository).save(testWorkspace);
+
+        System.out.println("User in workspace: " + testWorkspace.getUsers().size());
         System.out.println("Test case passed: Remove user out of workspace successfully");
+    }
+
+    @Test
+    @DisplayName("Edit password")
+    void should_Edit_Password_By_UserId() {
+        // Give
+        // Assume UserRepository return User with given userId
+        given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
+        System.out.println("Old password: " + testUser.getPassword());
+
+        // When
+        userService.editPassword(testUser.getUserId(), "Rm!t2022");
+
+        // Then
+        verify(userRepository).save(testUser);
+        System.out.println("New password: " + testUser.getPassword());
+        System.out.println("Test case passed: Edit user password successfully");
+    }
+
+    @Test
+    @DisplayName("Edit username")
+    void should_Edit_Username_By_UserId() {
+        // Give
+        // Assume UserRepository return User with given userId
+        given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
+        System.out.println("Old username: " + testUser.getUsername());
+
+        // When
+        userService.editUsername(testUser.getUserId(), "skywalker");
+
+        // Then
+        verify(userRepository).save(testUser);
+        System.out.println("New username: " + testUser.getUsername());
+        System.out.println("Test case passed: Edit username successfully");
     }
 }
