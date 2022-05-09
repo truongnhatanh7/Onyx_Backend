@@ -26,16 +26,18 @@ class WorkspaceRepositoryTest {
         Set<WorkspaceList> listSet = new HashSet<>();
         List<Workspace> workspaceSet = new ArrayList<>();
 
-        Workspace workspace = new Workspace(1L, "Backend test", null, null);
+        Workspace workspace = new Workspace(1L, "Backend test", null, null, null);
         User user = new User(
                 2L,
                 "Tri Lai",
                 "trilai",
                 "123456",
+                null,
                 null
         );
         WorkspaceList workspaceList = new WorkspaceList(3L, "Workspace Repos test", workspace, null);
 
+        workspace.setOwnerId(user.getUserId());
         user.setWorkspaces(workspaceSet);
         userSet.add(user);
         listSet.add(workspaceList);

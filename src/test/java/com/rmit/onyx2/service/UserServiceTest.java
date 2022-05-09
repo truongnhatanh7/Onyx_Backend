@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = UserServiceTest.class)
 class UserServiceTest {
     @Mock
@@ -52,30 +51,36 @@ class UserServiceTest {
                 4L,
                 "Onyx Test",
                 null,
+                null,
                 null
         );
 
         userSet = new HashSet<>();
 
         testUser = new User(
-                0L,
+                1L,
                 "Tri Lai",
                 "trilai",
                 "123456",
+                null,
                 workspaces
         );
+
+        testUser.setAvatarURL("https://minervastrategies.com/wp-content/uploads/2016/03/default-avatar.jpg");
         userSet.add(testUser);
+        testWorkspace.setOwnerId(testUser.getUserId());
         testWorkspace.setUsers(userSet);
         workspaces.add(testWorkspace);
     }
 
-    // Clear all the test variables
     @AfterEach
     void tearDown() {
-        workspaces = null;
-        testWorkspace = null;
-        userSet = null;
+        userRepository.deleteAll();
+        workspaceRepository.deleteAll();
+        workspaces.clear();
         testUser = null;
+        testWorkspace = null;
+        userSet.clear();
     }
 
     @Test
@@ -90,6 +95,7 @@ class UserServiceTest {
                 "Tri Lai",
                 "trilai",
                 "123456",
+                null,
                 workspaces
         );
 
@@ -98,6 +104,7 @@ class UserServiceTest {
                 "John Doe",
                 "johndoe",
                 "john123",
+                null,
                 workspaces
         );
 
@@ -106,6 +113,7 @@ class UserServiceTest {
                 "Jane Doe",
                 "janedoe",
                 "jane123",
+                null,
                 workspaces
         );
 
@@ -143,11 +151,14 @@ class UserServiceTest {
         given(userRepository.findById(testUser.getUserId()))
                 .willReturn(Optional.of(testUser));
 
+        System.out.println(testUser);
+
         // When
         userService.addUser(testUser);
 
         // Then
         verify(userRepository).save(userArgumentCaptor.capture());
+        verify(userRepository).findById(testUser.getUserId());
         assertThat(userArgumentCaptor.getValue()).isEqualTo(testUser);
         System.out.println("Test case passed: Add new user successfully");
         System.out.println("Parameter when save() is invoked: " + userArgumentCaptor.getValue().toString());
@@ -335,4 +346,39 @@ class UserServiceTest {
         System.out.println("New username: " + testUser.getUsername());
         System.out.println("Test case passed: Edit username successfully");
     }
+
+    @Test
+    @DisplayName("Edit name")
+    void editName() {
+        // Give
+        // Assume UserRepository return User with given userId
+        given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
+        System.out.println("Old name: " + testUser.getName());
+
+        // When
+        userService.editName(testUser.getUserId(), "John Doe");
+
+        // Then
+        verify(userRepository).save(testUser);
+        System.out.println("New name: " + testUser.getName());
+        System.out.println("Test case passed: Edit name successfully");
+    }
+
+    @Test
+    @DisplayName("Edit avatar URL")
+    void editAvatarURL() {
+        // Give
+        // Assume UserRepository return User with given userId
+        given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
+        System.out.println("Old URL: " + testUser.getAvatarURL());
+
+        // When
+        userService.editAvatarURL(testUser.getUserId(), "https://thelifetank.com/wp-content/uploads/2018/08/avatar-default-icon.png");
+
+        // Then
+        verify(userRepository).save(testUser);
+        System.out.println("New URL: " + testUser.getAvatarURL());
+        System.out.println("Test case passed: Edit avatar URL successfully");
+    }
+
 }

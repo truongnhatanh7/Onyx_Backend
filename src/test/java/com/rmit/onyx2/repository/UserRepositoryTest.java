@@ -47,6 +47,7 @@ class UserRepositoryTest {
                 "Tri Lai",
                 "trilai",
                 "123456",
+                null,
                 workspaceSet
         );
         userSet.add(user);
@@ -55,6 +56,7 @@ class UserRepositoryTest {
         Workspace workspace = new Workspace(
                 1L,
                 "Unit Testing",
+                user.getUserId(),
                 userSet,
                 workspaceLists
         );

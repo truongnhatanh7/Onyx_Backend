@@ -48,7 +48,7 @@ class WorkspaceListServiceTest {
 
     @BeforeEach
     void setUp() {
-        workspace = new Workspace(1L, "Backend test", null, null);
+        workspace = new Workspace(1L, "Backend test", null, null, null);
         workspaceList = new WorkspaceList(2L, "Unit testing", workspace, null);
         Task task = new Task(
                 3L,
@@ -63,8 +63,11 @@ class WorkspaceListServiceTest {
                 "Tri Lai",
                 "trilai",
                 "123456",
+                null,
                 null
         );
+
+        workspace.setOwnerId(testUser.getUserId());
         taskSet.add(task);
         listSet.add(workspaceList);
         workspaceSet.add(workspace);

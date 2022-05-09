@@ -48,6 +48,7 @@ class TaskRepositoryTest {
                 "Tri Lai",
                 "trilai",
                 "123456",
+                null,
                 workspaceSet
         );
         userSet.add(user);
@@ -55,6 +56,7 @@ class TaskRepositoryTest {
         Workspace workspace = new Workspace(
                 1L,
                 "Unit Testing",
+                user.getUserId(),
                 userSet,
                 workspaceLists
         );
