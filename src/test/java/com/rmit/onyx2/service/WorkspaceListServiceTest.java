@@ -84,6 +84,12 @@ class WorkspaceListServiceTest {
         workspaceRepository.deleteAll();
         workspaceListRepository.deleteAll();
         taskRepository.deleteAll();
+        workspace = null;
+        workspaceList = null;
+        userSet.clear();
+        listSet.clear();
+        workspaceSet.clear();
+        taskSet.clear();
     }
 
     @Test
