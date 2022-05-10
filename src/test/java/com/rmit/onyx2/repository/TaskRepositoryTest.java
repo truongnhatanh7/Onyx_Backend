@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -25,14 +24,14 @@ class TaskRepositoryTest {
     @Autowired
     private TaskRepository taskRepository;
 
-    private List<Workspace> workspaceSet = new ArrayList<>();
-    private Set<WorkspaceList> workspaceLists = new HashSet<>();
-    private Set<User> userSet = new HashSet<>();
-    private Set<Task> taskSet = new HashSet<Task>();
+    private final List<Workspace> workspaceSet = new ArrayList<>();
+    private final Set<WorkspaceList> workspaceLists = new HashSet<>();
+    private final Set<User> userSet = new HashSet<>();
+    private final Set<Task> taskSet = new HashSet<>();
 
     // Prepare the data including User, Workspace, WorkspaceList, Task
     @BeforeEach
-    void setUp() throws Exception{
+    void setUp() {
         testDataGenerator();
     }
 
@@ -71,7 +70,7 @@ class TaskRepositoryTest {
         workspaceLists.add(workspaceList);
 
         Task task1 = new Task(
-                0L,
+                1L,
                 "Test deleteTaskById method",
                 0,
                 0,
@@ -81,7 +80,7 @@ class TaskRepositoryTest {
         );
 
         Task task2 = new Task(
-                0L,
+                2L,
                 "Test foo method",
                 1,
                 0,
@@ -98,7 +97,8 @@ class TaskRepositoryTest {
     @Test
     @Rollback(value = false)
     @Order(3)
-    void should_Delete_By_Exist_Id() throws Exception{
+    @DisplayName("Delete Task with given taskID")
+    void should_Delete_By_Exist_Id() {
         // Given
         Task task = new Task(); // Target task
         Long taskId = 3L;
@@ -108,6 +108,9 @@ class TaskRepositoryTest {
         if (taskRepository.findById(taskId).isPresent()) {
             task = taskRepository.findById(taskId).get();
         }
+
+        System.out.println("-------------Task Repository size-------------");
+        System.out.println("Before: " + taskRepository.findAll().size());
 
         // When
         taskRepository.delete(task);
@@ -122,11 +125,14 @@ class TaskRepositoryTest {
         }
 
         assertThat(taskDeleted).isNull();
+        System.out.println("Before: " + taskRepository.findAll().size());
+        System.out.println("Test case passed: Delete Task by given taskID successful");
     }
 
     @Test
     @Rollback(value = false)
     @Order(4)
+    @DisplayName("Should not delete task with non-exist taskID")
     void should_Not_Delete_By_Non_Exist_Id() {
         // Given
         Task task = new Task(); // Target task
@@ -143,12 +149,14 @@ class TaskRepositoryTest {
 
         // Then
         assertThat(task.getTaskId()).isNull();
+        System.out.println("Test case passed: Should not delete task with non-exist taskID successfully");
     }
 
 
     @Test
     @Rollback(value = false)
     @Order(1)
+    @DisplayName("Should modify task position")
     void should_Update_Pos() {
         // Given
         Task task = new Task();
@@ -166,10 +174,12 @@ class TaskRepositoryTest {
         // Then
         assertThat(task.getPos()).isEqualTo(newPos);
         System.out.println(task);
+        System.out.println("Test case passed: Update task position successful");
     }
 
     @Test
     @Order(2)
+    @DisplayName("Should modify task priority")
     void should_Update_Priority() {
         // Given
         Task task = new Task();
@@ -186,5 +196,6 @@ class TaskRepositoryTest {
         // Then
         assertThat(task.getPriority()).isEqualTo(newPriority);
         System.out.println(task);
+        System.out.println("Test case passed: Update task priority successful");
     }
 }

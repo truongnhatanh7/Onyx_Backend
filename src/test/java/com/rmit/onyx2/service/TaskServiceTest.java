@@ -23,6 +23,8 @@ import static org.mockito.Mockito.verify;
 @ExtendWith({MockitoExtension.class})
 class TaskServiceTest {
 
+    Task testTask;
+
     @Mock
     private WorkspaceListRepository workspaceListRepository;
 
@@ -37,6 +39,16 @@ class TaskServiceTest {
         // Create mock object for fields annotated with @Mock
         // Create instance of fields annotated with @InjectMock and inject the mock object into it
         taskService = new TaskService(taskRepository, workspaceListRepository);
+
+        Task newTask = new Task(
+                3L,
+                "Edit video",
+                3,
+                0,
+                "Edit my recorded video and later render it",
+                LocalDate.now(),
+                null
+        );
     }
 
     @Test

@@ -41,5 +41,6 @@ class WorkspaceListRepositoryTest {
         }
         System.out.println("Amount of lists within the workspace: " + workspaceListRepository.findAll().size());
         assertThat(tempWorkspaceList).isNull();
+        System.out.println("Test case passed: Delete WorkspaceList with its given ID successfully");
     }
 }

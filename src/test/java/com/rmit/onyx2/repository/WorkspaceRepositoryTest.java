@@ -3,11 +3,10 @@ package com.rmit.onyx2.repository;
 import com.rmit.onyx2.model.User;
 import com.rmit.onyx2.model.Workspace;
 import com.rmit.onyx2.model.WorkspaceList;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.*;
 
@@ -15,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class WorkspaceRepositoryTest {
 
     @Autowired
@@ -50,6 +50,8 @@ class WorkspaceRepositoryTest {
     }
 
     @Test
+    @Order(2)
+    @Rollback(value = false)
     @DisplayName("Delete workspace by id")
     void should_Delete_By_Id() {
         // Given
@@ -69,10 +71,14 @@ class WorkspaceRepositoryTest {
         }
         System.out.println("Amount of workspaces in workspace repository: " + workspaceRepository.findAll().size());
         assertThat(tempWorkspace).isNull();
+        System.out.println("Test case passed: Delete Workspace with its given ID successfully");
     }
 
     @Test
-    void findAllByUserId() {
+    @Order(1)
+    @Rollback(value = false)
+    @DisplayName("Find Workspaces by their Owner ID")
+    void should_Find_All_By_UserId() {
         // Given
         List<Workspace> expected = new ArrayList<>();
         List<User> userList = new ArrayList<>(workspaceRepository.findById(1L).get().getUsers());
@@ -82,5 +88,6 @@ class WorkspaceRepositoryTest {
         assertEquals(expected, workspaceRepository.findAllByUserId(userList.get(0).getUserId()));
         System.out.println("User " + userList.get(0).getName() + " has " + expected.size() + ((expected.size() > 1) ? " workspaces" : " workspace"));
         System.out.println(expected.get(0).toString());
+        System.out.println("Test case passed: Return list of Workspace given user ID successfully");
     }
 }

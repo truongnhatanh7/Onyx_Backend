@@ -6,6 +6,7 @@ import com.rmit.onyx2.model.Workspace;
 import com.rmit.onyx2.model.WorkspaceList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,10 +25,10 @@ class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-    private List<Workspace> workspaceSet = new ArrayList<>();
-    private Set<WorkspaceList> workspaceLists = new HashSet<>();
-    private Set<User> userSet = new HashSet<>();
-    private Set<Task> taskSet = new HashSet<>();
+    private final List<Workspace> workspaceSet = new ArrayList<>();
+    private final Set<WorkspaceList> workspaceLists = new HashSet<>();
+    private final Set<User> userSet = new HashSet<>();
+    private final Set<Task> taskSet = new HashSet<>();
 
     // Prepare the data including User, Workspace, WorkspaceList, Task
     @BeforeEach
@@ -95,6 +96,7 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Delete User by their ID")
     void deleteById() {
         // Given
         User user = new User(); // Target task
@@ -106,8 +108,12 @@ class UserRepositoryTest {
             user = userRepository.findById(userId).get();
         }
 
+        System.out.println("-------------User Repository size-------------");
+        System.out.println("Before: " + userRepository.findAll().size());
+
         // When
         userRepository.delete(user);
+        System.out.println("After: " + userRepository.findAll().size());
 
         // Then
         Optional<User> optionalUser = userRepository.findById(userId);
@@ -119,5 +125,6 @@ class UserRepositoryTest {
         }
 
         assertThat(userDeleted).isNull();
+        System.out.println("Test case passed: Delete User with given ID successfully");
     }
 }
