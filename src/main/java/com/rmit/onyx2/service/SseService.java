@@ -39,4 +39,17 @@ public class SseService {
         });
         emitters.removeAll(deadEmitters);
     }
+
+    @Async
+    public void doNotifyDashboard(String message) {
+        List<SseEmitter> deadEmitters = new ArrayList<>();
+        emitters.forEach(emitter -> {
+            try {
+                emitter.send(SseEmitter.event().data(message));
+            } catch (Exception e) {
+                deadEmitters.add(emitter);
+            }
+        });
+        emitters.removeAll(deadEmitters);
+    }
 }

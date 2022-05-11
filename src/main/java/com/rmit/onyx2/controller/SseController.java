@@ -30,4 +30,13 @@ public class SseController {
         emitter.onTimeout(() -> service.removeEmitter(emitter));
         return new ResponseEntity<>(emitter, HttpStatus.OK);
     }
+
+    @GetMapping("/notification")
+    public ResponseEntity<SseEmitter> doNotifyDashboard() {
+        final SseEmitter emitter = new SseEmitter();
+        service.addEmitter(emitter);
+        emitter.onCompletion(() -> service.removeEmitter(emitter));
+        emitter.onTimeout(() -> service.removeEmitter(emitter));
+        return new ResponseEntity<>(emitter, HttpStatus.OK);
+    }
 }

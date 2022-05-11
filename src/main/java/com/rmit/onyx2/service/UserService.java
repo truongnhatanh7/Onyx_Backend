@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,8 +21,7 @@ import java.util.*;
 
 @Service
 public class UserService {
-
-
+    private final SseService sseService;
     private final UserRepository userRepository;
     private final WorkspaceRepository workspaceRepository;
     private final WorkspaceListRepository workspaceListRepository;
@@ -35,10 +35,11 @@ public class UserService {
     private WorkspaceService workspaceService;
 
     @Autowired
-    public UserService(UserRepository userRepository,
+    public UserService(SseService sseService, UserRepository userRepository,
                        WorkspaceRepository workspaceRepository,
                        WorkspaceListRepository workspaceListRepository,
                        TaskRepository taskRepository) {
+        this.sseService = sseService;
         this.userRepository = userRepository;
         this.workspaceRepository = workspaceRepository;
         this.workspaceListRepository = workspaceListRepository;
@@ -70,6 +71,14 @@ public class UserService {
             }
             user.get().getWorkspaces().add(workspace.get());
             userRepository.save(user.get());
+            try {
+                SseEmitter sseEmitter = new SseEmitter();
+                sseService.addEmitter(sseEmitter);
+                sseService.doNotifyDashboard("addWorkspaceForUserById");
+
+            } catch (Exception e) {
+                System.out.println("Fail");
+            }
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -130,6 +139,14 @@ public class UserService {
             user.get().getWorkspaces().remove(workspace.get());
             workspaceRepository.save(workspace.get());
             userRepository.save(user.get());
+            try {
+                SseEmitter sseEmitter = new SseEmitter();
+                sseService.addEmitter(sseEmitter);
+                sseService.doNotifyDashboard("removeUserFromWorkspaceById");
+
+            } catch (Exception e) {
+                System.out.println("Fail");
+            }
         }
     }
 
