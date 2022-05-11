@@ -13,12 +13,14 @@ import java.util.List;
 public class WorkspaceDTO {
     private Long workspaceId;
     private String workspaceTitle;
+    private Long ownerId;
     List<WorkspaceListDTO> workspaceLists = new ArrayList<>();
     List<UserDTO> users = new ArrayList<>();
 
     public WorkspaceDTO(Workspace workspace) {
         this.workspaceId = workspace.getWorkspaceId();
         this.workspaceTitle = workspace.getWorkspaceTitle();
+        this.ownerId = workspace.getOwnerId();
 
         for (WorkspaceList workspaceList : workspace.getWorkspaceLists()) {
             WorkspaceListDTO workspaceListDTO = new WorkspaceListDTO();

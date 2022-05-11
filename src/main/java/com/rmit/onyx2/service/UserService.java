@@ -63,6 +63,11 @@ public class UserService {
         Optional<User> user = userRepository.findById(userId);
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
         if (user.isPresent() && workspace.isPresent()) {
+            for (User u : workspace.get().getUsers()) {
+                if (Objects.equals(u.getUserId(), user.get().getUserId())) {
+                    return ResponseEntity.badRequest().build();
+                }
+            }
             user.get().getWorkspaces().add(workspace.get());
             userRepository.save(user.get());
             return ResponseEntity.ok().build();
@@ -80,7 +85,7 @@ public class UserService {
         query.setParameter("user_name",user.getName());
         query.setParameter("password",user.getPassword());
         entityManager.flush();
-        Integer result = query.executeUpdate();
+        int result = query.executeUpdate();
         if (result != 0) {
            return ResponseEntity.ok().build();
         }

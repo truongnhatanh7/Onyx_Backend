@@ -9,6 +9,7 @@ import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,15 +22,16 @@ import java.util.Optional;
 
 @Service
 public class WorkspaceListService {
-
-    private WorkspaceListRepository workspaceListRepository;
-    private WorkspaceRepository workspaceRepository;
-    private TaskRepository taskRepository;
+    private final SseService sseService;
+    private final WorkspaceListRepository workspaceListRepository;
+    private final WorkspaceRepository workspaceRepository;
+    private final TaskRepository taskRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    public WorkspaceListService(WorkspaceListRepository workspaceListRepository, WorkspaceRepository workspaceRepository, TaskRepository taskRepository) {
+    public WorkspaceListService(SseService sseService, WorkspaceListRepository workspaceListRepository, WorkspaceRepository workspaceRepository, TaskRepository taskRepository) {
+        this.sseService = sseService;
         this.workspaceListRepository = workspaceListRepository;
         this.workspaceRepository = workspaceRepository;
         this.taskRepository = taskRepository;
@@ -40,9 +42,10 @@ public class WorkspaceListService {
         if (workspace.isPresent()) {
             workspace.get().getWorkspaceLists();
             List<WorkspaceList> temp = new ArrayList<>();
-            for (WorkspaceList workspaceList : workspace.get().getWorkspaceLists()) {
-                temp.add(workspaceList);
-            }
+            temp.addAll(workspace.get().getWorkspaceLists());
+//            for (WorkspaceList workspaceList : workspace.get().getWorkspaceLists()) {
+//                temp.add(workspaceList);
+//            }
             temp.sort(Comparator.comparing(WorkspaceList::getListId));
             return temp;
         }
@@ -55,9 +58,16 @@ public class WorkspaceListService {
             workspaceList.setWorkspace(workspace.get());
             workspaceListRepository.save(workspaceList);
             List<WorkspaceList> temp = workspaceListRepository.findAll();
+            try {
+                SseEmitter sseEmitter = new SseEmitter();
+                sseService.addEmitter(sseEmitter);
+                sseService.doNotify("addWorkspaceListByWorkspaceId");
+
+            } catch (Exception e) {
+                System.out.println("Fail");
+            }
             if (temp.size() > 0) {
-                WorkspaceListDTO listDTO = new WorkspaceListDTO(temp.get(temp.size() - 1));
-                return listDTO;
+                return new WorkspaceListDTO(temp.get(temp.size() - 1));
             } else {
                 return new WorkspaceListDTO();
             }
@@ -76,6 +86,14 @@ public class WorkspaceListService {
        entityManager.flush();
        Integer result = query.executeUpdate();
        entityManager.clear();
+        try {
+            SseEmitter sseEmitter = new SseEmitter();
+            sseService.addEmitter(sseEmitter);
+            sseService.doNotify("editWorkspaceList");
+
+        } catch (Exception e) {
+            System.out.println("Fail");
+        }
        return result;
    }
 
@@ -87,5 +105,14 @@ public class WorkspaceListService {
             }
             workspaceListRepository.deleteById(workspaceListId);
         }
+        try {
+            SseEmitter sseEmitter = new SseEmitter();
+            sseService.addEmitter(sseEmitter);
+            sseService.doNotify("deleteWorkspaceListById");
+
+        } catch (Exception e) {
+            System.out.println("Fail");
+        }
     }
+
 }
