@@ -39,4 +39,9 @@ public class SseController {
         emitter.onTimeout(() -> service.removeEmitter(emitter));
         return new ResponseEntity<>(emitter, HttpStatus.OK);
     }
+
+    @PostMapping("/num-setpos/{num}")
+    public void setNumSetPos(@PathVariable(name = "num") int num) {
+        service.setNumSetPos(num);
+    }
 }

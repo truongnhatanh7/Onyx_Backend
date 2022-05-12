@@ -14,6 +14,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SseService {
     final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
     private Long workspaceId;
+    private int numSetPos;
+
+    public void setNumSetPos(int numSetPos) {
+        this.numSetPos = numSetPos;
+    }
 
     public void setWorkspaceId(Long workspaceId) {
         this.workspaceId = workspaceId;
@@ -32,7 +37,7 @@ public class SseService {
         List<SseEmitter> deadEmitters = new ArrayList<>();
         emitters.forEach(emitter -> {
             try {
-                emitter.send(SseEmitter.event().data(workspaceId+ " " +message));
+                emitter.send(SseEmitter.event().data(workspaceId + " " + message + " " + numSetPos));
             } catch (Exception e) {
                 deadEmitters.add(emitter);
             }
