@@ -89,6 +89,7 @@ public class TaskService {
                 sseService.doNotify("switchList");
 
             } catch (Exception e) {
+
                 System.out.println("Fail");
             }
 
