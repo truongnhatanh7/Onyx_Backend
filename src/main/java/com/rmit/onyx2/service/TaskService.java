@@ -8,24 +8,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
 @Service
 public class TaskService {
-
+    private final SseService sseService;
     private final TaskRepository taskRepository;
     private final WorkspaceListRepository workspaceListRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, WorkspaceListRepository workspaceListRepository) {
+    public TaskService(SseService sseService, TaskRepository taskRepository, WorkspaceListRepository workspaceListRepository) {
+        this.sseService = sseService;
         this.taskRepository = taskRepository;
         this.workspaceListRepository = workspaceListRepository;
     }
@@ -43,8 +46,16 @@ public class TaskService {
         query.setParameter("content",task.getTaskContent());
         query.setParameter("taskId",task.getTaskId());
         entityManager.flush();
-        Integer result = query.executeUpdate();
+        int result = query.executeUpdate();
         entityManager.clear();
+        try {
+            SseEmitter sseEmitter = new SseEmitter();
+            sseService.addEmitter(sseEmitter);
+            sseService.doNotify("editTask");
+
+        } catch (Exception e) {
+            System.out.println("Fail");
+        }
         if(result == 1) {
             return  ResponseEntity.ok().build();
         }
@@ -69,11 +80,22 @@ public class TaskService {
         query.setParameter("destinationListId",destinationListId);
         query.setParameter("taskId",task.getTaskId());
         entityManager.flush();
-        Integer result = query.executeUpdate();
+        int result = query.executeUpdate();
         entityManager.clear();
         if(result == 1) {
+            try {
+                SseEmitter sseEmitter = new SseEmitter();
+                sseService.addEmitter(sseEmitter);
+                sseService.doNotify("switchList");
+
+            } catch (Exception e) {
+
+                System.out.println("Fail");
+            }
+
             return  ResponseEntity.ok().build();
         }
+
         return ResponseEntity.badRequest().build();
     }
     public Task addTaskByListId(Long listId, Task task) {
@@ -81,6 +103,14 @@ public class TaskService {
         if (list.isPresent()) {
             task.setWorkspaceList(list.get());
             taskRepository.save(task);
+            try {
+                SseEmitter sseEmitter = new SseEmitter();
+                sseService.addEmitter(sseEmitter);
+                sseService.doNotify("addTask");
+
+            } catch (Exception e) {
+                System.out.println("Fail");
+            }
             List<Task> temp =  taskRepository.findAll();
             if (temp.size() > 0) {
                 return temp.get(temp.size() - 1);
@@ -88,11 +118,20 @@ public class TaskService {
                 return new Task();
             }
         }
+
         return new Task();
     }
 
     public void deleteTaskById(Long taskId) {
         taskRepository.deleteById(taskId);
+        try {
+            SseEmitter sseEmitter = new SseEmitter();
+            sseService.addEmitter(sseEmitter);
+            sseService.doNotify("deleteTask");
+
+        } catch (Exception e) {
+            System.out.println("Fail");
+        }
     }
 
     @Transactional
@@ -101,8 +140,16 @@ public class TaskService {
         Optional<Task> task = taskRepository.findById(taskId);
         if (task.isPresent()) {
             taskRepository.updatePos(taskId, pos);
-
         }
+        try {
+            SseEmitter sseEmitter = new SseEmitter();
+            sseService.addEmitter(sseEmitter);
+            sseService.doNotify("setPos");
+
+        } catch (Exception e) {
+            System.out.println("Fail");
+        }
+
     }
 
     @Transactional
@@ -110,6 +157,14 @@ public class TaskService {
         Optional<Task> task = taskRepository.findById(taskId);
         if (task.isPresent()) {
             taskRepository.updatePriority(taskId, priority);
+        }
+        try {
+            SseEmitter sseEmitter = new SseEmitter();
+            sseService.addEmitter(sseEmitter);
+            sseService.doNotify("setPriority");
+
+        } catch (Exception e) {
+            System.out.println("Fail");
         }
     }
 
@@ -127,6 +182,14 @@ public class TaskService {
             query.executeUpdate();
             entityManager.clear();
         }
+        try {
+            SseEmitter sseEmitter = new SseEmitter();
+            sseService.addEmitter(sseEmitter);
+            sseService.doNotify("setDesc");
+
+        } catch (Exception e) {
+            System.out.println("Fail");
+        }
     }
 
     @Transactional
@@ -142,6 +205,14 @@ public class TaskService {
             entityManager.flush();
             query.executeUpdate();
             entityManager.clear();
+        }
+        try {
+            SseEmitter sseEmitter = new SseEmitter();
+            sseService.addEmitter(sseEmitter);
+            sseService.doNotify("setDeadline");
+
+        } catch (Exception e) {
+            System.out.println("Fail");
         }
     }
 }
