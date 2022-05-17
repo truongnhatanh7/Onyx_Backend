@@ -7,10 +7,12 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+//Data Transfer object patter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
+    //Atributes
     private Long userId;
     private String name;
     private String username;
@@ -25,6 +27,7 @@ public class UserDTO {
         this.password = user.getPassword();
         this.avatarURL = user.getAvatarURL();
 
+        //Set workspace to user helper method
         for (Workspace workspace : user.getWorkspaces()) {
             WorkspaceDTO temp = new WorkspaceDTO();
             temp.setWorkspaceTitle(workspace.getWorkspaceTitle());
