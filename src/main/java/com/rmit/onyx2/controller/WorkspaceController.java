@@ -23,6 +23,7 @@ public class WorkspaceController {
 
     private final WorkspaceService workspaceService;
 
+    //Injecting WorkspaceService dependency to Workspace Controller
     @Autowired
     public WorkspaceController(WorkspaceService workspaceService) {
         this.workspaceService = workspaceService;

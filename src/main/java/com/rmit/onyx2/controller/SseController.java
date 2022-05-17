@@ -21,6 +21,7 @@ public class SseController {
 
     final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
+    //Need an emitter to track changes im the front end
     @GetMapping("/notification/{workspaceId}")
     public ResponseEntity<SseEmitter> doNotify(@PathVariable(name = "workspaceId") Long workspaceId) {
         final SseEmitter emitter = new SseEmitter();
@@ -31,6 +32,7 @@ public class SseController {
         return new ResponseEntity<>(emitter, HttpStatus.OK);
     }
 
+    //Keep track of changes in the dashboard
     @GetMapping("/notification")
     public ResponseEntity<SseEmitter> doNotifyDashboard() {
         final SseEmitter emitter = new SseEmitter();

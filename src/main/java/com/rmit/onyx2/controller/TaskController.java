@@ -22,11 +22,12 @@ import java.util.Set;
 @CrossOrigin(origins = "*")
 public class TaskController {
     private final TaskService taskService;
-
+    //Dependency injection for task service
     @Autowired
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
+
 
     @GetMapping("/{listId}")
     public Set<Task> getAllTasksByListId(@PathVariable(name = "listId") Long listId) {

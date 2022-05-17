@@ -18,11 +18,14 @@ public class UserController {
 
     private final UserService userService;
 
+    //Dependency injection of User Service
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    // CRUD methods
+    //CRUD Relating to user
     @GetMapping("/all-users/")
     public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
@@ -63,6 +66,12 @@ public class UserController {
         userService.editAvatarURL(userId, newAvatarURL);
     }
 
+    @DeleteMapping("/{userId}")
+    public void deleteUserById(@PathVariable(name = "userId") Long userId) {
+        userService.deleteUserById(userId);
+    }
+
+    //CRUD Method responsible for adding and removing workspace of the user.
     @PostMapping("/add-workspace-for-user-by-id/{workspaceId}/{userId}")
     public ResponseEntity<User> addWorkspaceForUserById(@PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
         return userService.addWorkspaceForUserById(workspaceId, userId);
@@ -73,8 +82,4 @@ public class UserController {
         userService.removeUserFromWorkspaceById(workspaceId, userId);
     }
 
-    @DeleteMapping("/{userId}")
-    public void deleteUserById(@PathVariable(name = "userId") Long userId) {
-        userService.deleteUserById(userId);
-    }
 }

@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.*;
 public class EmailController {
     private final EmailService emailService;
 
+    //Depenđency injection of Email Controller
     @Autowired
     public EmailController(EmailService emailService) {
         this.emailService = emailService;
     }
 
+    //A function to send email to the user
     @PostMapping("/notifyUser/{userEmail}")
     public void sendEmail(@PathVariable String userEmail) {
         emailService.sendSimpleEmail(userEmail);
