@@ -29,6 +29,7 @@ public class WorkspaceListService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    //Constructor Dependency injection
     @Autowired
     public WorkspaceListService(SseService sseService, WorkspaceListRepository workspaceListRepository, WorkspaceRepository workspaceRepository, TaskRepository taskRepository) {
         this.sseService = sseService;
@@ -40,18 +41,22 @@ public class WorkspaceListService {
     public List<WorkspaceList> getWorkspaceListByWorkspaceId(Long id) {
         Optional<Workspace> workspace = workspaceRepository.findById(id);
         if (workspace.isPresent()) {
+
             workspace.get().getWorkspaceLists();
             List<WorkspaceList> temp = new ArrayList<>();
+            //Retrieving workspace List
             temp.addAll(workspace.get().getWorkspaceLists());
 //            for (WorkspaceList workspaceList : workspace.get().getWorkspaceLists()) {
 //                temp.add(workspaceList);
 //            }
+            //Sorting workspaceList
             temp.sort(Comparator.comparing(WorkspaceList::getListId));
             return temp;
         }
         return null;
     }
 
+    //Handling when creating new workspace
     public WorkspaceListDTO addWorkspaceListByWorkspaceId(Long workspaceId, WorkspaceList workspaceList) {
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
         if (workspace.isPresent()) {
@@ -75,7 +80,7 @@ public class WorkspaceListService {
         return new WorkspaceListDTO();
     }
 
-    //A class to edit the information of workspace
+    //A methode to edit the information of workspace
     @Transactional
    public Integer editWorkspaceList(WorkspaceList workspaceList, Long workspaceId) {
        String hsql = "update WorkspaceList w set w.name =:nameList where w.listId =: listId and w.workspace.workspaceId =: workspaceId";
@@ -97,8 +102,10 @@ public class WorkspaceListService {
        return result;
    }
 
+   //Trugger when delete user
     public void deleteWorkspaceListById(Long workspaceListId) {
         Optional<WorkspaceList> temp = workspaceListRepository.findById(workspaceListId);
+        //Id matcher
         if (temp.isPresent()) {
             for (Task t : temp.get().getTasks()) {
                 taskRepository.deleteById(t.getTaskId());
