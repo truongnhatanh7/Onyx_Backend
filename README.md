@@ -15,7 +15,12 @@ Inspired by project management tools (Trello, Jira, etc.) that allow users to or
 ## Getting Started
 
 ### Dependencies
-
+* Spring boot
+* Lombok
+* Posgres
+* Gmail Mail server
+* Cloudinary API
+* Maven
 * Working on OS platforms: Windows 10, MacOS and Ubuntu (Linux)
 * Link to Front-end: [Onyx Front-end](https://github.com/truongnhatanh7/EEET2580_Onyx_Project)
 
