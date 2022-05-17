@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class EmailController {
     private final EmailService emailService;
 
-    //Depenđency injection of Email Controller
+    //Dependency injection of Email Controller
     @Autowired
     public EmailController(EmailService emailService) {
         this.emailService = emailService;
