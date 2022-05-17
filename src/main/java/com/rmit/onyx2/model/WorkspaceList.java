@@ -19,6 +19,7 @@ public class WorkspaceList {
     @Column(name = "name")
     private String name;
 
+    //Workspace can have many workspacelist
     @ManyToOne(cascade = CascadeType.ALL , fetch = FetchType.EAGER)
     @JoinColumn(name = "workspace_id", referencedColumnName = "workspace_id")
     @EqualsAndHashCode.Exclude
@@ -26,6 +27,7 @@ public class WorkspaceList {
     @JsonBackReference
     private Workspace workspace;
 
+    //Workspace List can belong to only one workspace
     @OneToMany(mappedBy = "workspaceList",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
