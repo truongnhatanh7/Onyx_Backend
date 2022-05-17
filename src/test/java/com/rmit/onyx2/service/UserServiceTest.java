@@ -175,9 +175,11 @@ class UserServiceTest {
         given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.empty());
 
         // When
-        userService.addWorkspaceForUserById(testWorkspace.getWorkspaceId(), testUser.getUserId());
+        ResponseEntity<User> actual = userService.addWorkspaceForUserById(testWorkspace.getWorkspaceId(), testUser.getUserId());
 
         // Then
+        ResponseEntity<User> expected = ResponseEntity.badRequest().build();
+        assertEquals(expected, actual);
         assertThat(userRepository.findAll().size()).isEqualTo(0);
         System.out.println("Test case passed: Add non-exist workspace to exist user");
     }
@@ -190,9 +192,11 @@ class UserServiceTest {
         given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.of(testWorkspace));
 
         // When
-        userService.addWorkspaceForUserById(testWorkspace.getWorkspaceId(), testUser.getUserId());
+        ResponseEntity<User> actual = userService.addWorkspaceForUserById(testWorkspace.getWorkspaceId(), testUser.getUserId());
 
         // Then
+        ResponseEntity<User> expected = ResponseEntity.badRequest().build();
+        assertEquals(expected, actual);
         assertThat(userRepository.findAll().size()).isEqualTo(0);
         System.out.println("Test case passed: Add exist workspace to non-exist user");
     }
@@ -230,11 +234,13 @@ class UserServiceTest {
         System.out.println("Before adding: " + testUser.getWorkspaces().size());
 
         // When
-        userService.addWorkspaceForUserById(testWorkspace.getWorkspaceId(), testUser.getUserId());
+        ResponseEntity<User> actual = userService.addWorkspaceForUserById(testWorkspace.getWorkspaceId(), testUser.getUserId());
         System.out.println("After adding: " + testUser.getWorkspaces().size());
         testUser.getWorkspaces().forEach(System.out::println);
 
         // Then
+        ResponseEntity<User> expected = ResponseEntity.ok().build();
+        assertEquals(expected, actual);
         verify(userRepository).save(userArgumentCaptor.capture());
         assertThat(userArgumentCaptor.getValue()).isEqualTo(testUser);
         System.out.println("Test case passed: Add exist workspace to exist user");
