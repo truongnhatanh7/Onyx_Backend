@@ -9,16 +9,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -33,6 +33,9 @@ class UserServiceTest {
 
     @Mock
     WorkspaceService workspaceService;
+
+    @Mock
+    SseService sseService;
 
     @InjectMocks
     UserService userService;
@@ -195,16 +198,41 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Return the ok request as adding workspace successfully")
-    void should_Add_Workspace_For_UserById() {
+    @DisplayName("Return the bad request when the added workspace already connect to the wanted user")
+    void test_Add_Workspace_For_User_When_User_Already_Have_That_Workspace() {
         // Given
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
         given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.of(testWorkspace));
 
+
+        // When
+        ResponseEntity<User> actual = userService.addWorkspaceForUserById(testWorkspace.getWorkspaceId(), testUser.getUserId());
+
+        // Then
+        ResponseEntity<User> expected = ResponseEntity.badRequest().build();
+        assertEquals(expected, actual);
+        System.out.println("Test case passed: Workspace is already connected to user");
+    }
+
+    @Test
+    @DisplayName("Return the ok request as adding workspace successfully")
+    void should_Add_Workspace_For_UserById() {
+        // Given
+        // Assume User and Workspace has no connection to each other so far
+        testUser.getWorkspaces().remove(testWorkspace);
+        testWorkspace.getUsers().remove(testUser);
+
+        given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
+        given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.of(testWorkspace));
+
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        testUser.getWorkspaces().forEach(System.out::println);
+        System.out.println("Before adding: " + testUser.getWorkspaces().size());
 
         // When
         userService.addWorkspaceForUserById(testWorkspace.getWorkspaceId(), testUser.getUserId());
+        System.out.println("After adding: " + testUser.getWorkspaces().size());
+        testUser.getWorkspaces().forEach(System.out::println);
 
         // Then
         verify(userRepository).save(userArgumentCaptor.capture());
@@ -220,18 +248,6 @@ class UserServiceTest {
         userRepository.save(testUser);
         // Assume the userRepository return the user
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
-
-        // Assume the workspaceRepository return the workspace
-//        List<Workspace> workspaceList = new ArrayList<>();
-//        workspaceList.add(testWorkspace);
-//        given(workspaceRepository.findAll()).willReturn(workspaceList);
-//
-        // When
-//        try {
-//            userService.deleteUserById(testUser.getUserId());
-//        } catch (Exception exception) {
-//            verify(workspaceService).deleteWorkspaceById(testWorkspace.getWorkspaceId());
-//        }
 
         userService.deleteUserById(testUser.getUserId());
 
