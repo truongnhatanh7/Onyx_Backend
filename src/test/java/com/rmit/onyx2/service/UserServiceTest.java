@@ -180,6 +180,7 @@ class UserServiceTest {
         // Then
         ResponseEntity<User> expected = ResponseEntity.badRequest().build();
         assertEquals(expected, actual);
+        System.out.println("Expected: " + expected + " - Actual: " + actual);
         assertThat(userRepository.findAll().size()).isEqualTo(0);
         System.out.println("Test case passed: Add non-exist workspace to exist user");
     }
@@ -197,6 +198,7 @@ class UserServiceTest {
         // Then
         ResponseEntity<User> expected = ResponseEntity.badRequest().build();
         assertEquals(expected, actual);
+        System.out.println("Expected: " + expected + " - Actual: " + actual);
         assertThat(userRepository.findAll().size()).isEqualTo(0);
         System.out.println("Test case passed: Add exist workspace to non-exist user");
     }
@@ -215,6 +217,7 @@ class UserServiceTest {
         // Then
         ResponseEntity<User> expected = ResponseEntity.badRequest().build();
         assertEquals(expected, actual);
+        System.out.println("Expected: " + expected + " - Actual: " + actual);
         System.out.println("Test case passed: Workspace is already connected to user");
     }
 
@@ -241,6 +244,7 @@ class UserServiceTest {
         // Then
         ResponseEntity<User> expected = ResponseEntity.ok().build();
         assertEquals(expected, actual);
+        System.out.println("Expected: " + expected + " - Actual: " + actual);
         verify(userRepository).save(userArgumentCaptor.capture());
         assertThat(userArgumentCaptor.getValue()).isEqualTo(testUser);
         System.out.println("Test case passed: Add exist workspace to exist user");
