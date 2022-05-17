@@ -31,6 +31,9 @@ class TaskServiceTest {
     @Mock
     private TaskRepository taskRepository;
 
+    @Mock
+    private SseService sseService;
+
     @InjectMocks
     private TaskService taskService;
 
@@ -38,7 +41,7 @@ class TaskServiceTest {
     void setUp() {
         // Create mock object for fields annotated with @Mock
         // Create instance of fields annotated with @InjectMock and inject the mock object into it
-        taskService = new TaskService(taskRepository, workspaceListRepository);
+        taskService = new TaskService(sseService, taskRepository, workspaceListRepository);
 
         Task newTask = new Task(
                 3L,
