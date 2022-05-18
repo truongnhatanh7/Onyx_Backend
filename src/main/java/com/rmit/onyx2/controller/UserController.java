@@ -18,11 +18,15 @@ public class UserController {
 
     private final UserService userService;
 
+    //Dependency injection of User Service
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    // CRUD methods
+    //CRUD Relating to user
+    //Read
     @GetMapping("/all-users/")
     public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
@@ -33,11 +37,13 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
+    //Create
     @PostMapping
     public UserDTO addUser(@RequestBody User user) {
         return userService.addUser(user);
     }
 
+    //Update
     @PutMapping("")
     public ResponseEntity<User> editUser(@RequestBody User user) {
         return userService.editUser(user);
@@ -58,11 +64,19 @@ public class UserController {
         userService.editUsername(userId, newUsername);
     }
 
+    //Function allowing user to edit the avatar
     @PatchMapping(path = "/edit-avatar")
     public void editAvatarURL(@RequestParam(name = "userId") Long userId, @RequestParam(name = "avatar") String newAvatarURL) {
         userService.editAvatarURL(userId, newAvatarURL);
     }
 
+    //Delete
+    @DeleteMapping("/{userId}")
+    public void deleteUserById(@PathVariable(name = "userId") Long userId) {
+        userService.deleteUserById(userId);
+    }
+
+    //CRUD Method responsible for adding and removing workspace of the user.
     @PostMapping("/add-workspace-for-user-by-id/{workspaceId}/{userId}")
     public ResponseEntity<User> addWorkspaceForUserById(@PathVariable(name = "workspaceId") Long workspaceId, @PathVariable(name = "userId") Long userId) {
         return userService.addWorkspaceForUserById(workspaceId, userId);
@@ -73,8 +87,4 @@ public class UserController {
         userService.removeUserFromWorkspaceById(workspaceId, userId);
     }
 
-    @DeleteMapping("/{userId}")
-    public void deleteUserById(@PathVariable(name = "userId") Long userId) {
-        userService.deleteUserById(userId);
-    }
 }

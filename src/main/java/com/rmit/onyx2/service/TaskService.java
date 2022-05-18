@@ -33,6 +33,7 @@ public class TaskService {
         this.workspaceListRepository = workspaceListRepository;
     }
 
+
     public Set<Task> getAllTasksByListId(Long listId) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
         return list.map(WorkspaceList::getTasks).orElse(null);
@@ -40,6 +41,7 @@ public class TaskService {
 
     @Transactional
     public ResponseEntity<Task> editTask (Task task) {
+        //Edit task using Hibernate Sql Language
         String hsql = "update Task t set t.taskContent =:content " +
                         "where t.taskId =: taskId ";
         Query query = entityManager.createQuery(hsql);
@@ -67,11 +69,13 @@ public class TaskService {
     public ResponseEntity<Task> editTask (Task task, Long destinationListId) {
         String hsql;
         Query query;
+
         if(task.getTaskContent() ==null) {
             hsql = "update Task t set t.workspaceList.listId =:destinationListId " +
                     "where t.taskId =: taskId ";
             query = entityManager.createQuery(hsql);
         } else{
+            //Task content is available
             hsql = "update Task t set t.taskContent =:content, t.workspaceList.listId =: destinationListId " +
                     "where t.taskId =: taskId ";
             query = entityManager.createQuery(hsql);
@@ -84,6 +88,7 @@ public class TaskService {
         entityManager.clear();
         if(result == 1) {
             try {
+                //Emitt change list event
                 SseEmitter sseEmitter = new SseEmitter();
                 sseService.addEmitter(sseEmitter);
                 sseService.doNotify("switchList");
@@ -98,6 +103,7 @@ public class TaskService {
 
         return ResponseEntity.badRequest().build();
     }
+
     public Task addTaskByListId(Long listId, Task task) {
         Optional<WorkspaceList> list = workspaceListRepository.findById(listId);
         if (list.isPresent()) {
@@ -124,6 +130,7 @@ public class TaskService {
 
     public void deleteTaskById(Long taskId) {
         taskRepository.deleteById(taskId);
+        //Emitting task changing event
         try {
             SseEmitter sseEmitter = new SseEmitter();
             sseService.addEmitter(sseEmitter);
@@ -134,6 +141,7 @@ public class TaskService {
         }
     }
 
+    //Need this methode to determine the position of the task
     @Transactional
     @Async
     public void setPos(Long taskId, Integer pos) {
@@ -152,12 +160,14 @@ public class TaskService {
 
     }
 
+    //Mark a task as priority
     @Transactional
     public void setPriority(Long taskId, Integer priority) {
         Optional<Task> task = taskRepository.findById(taskId);
         if (task.isPresent()) {
             taskRepository.updatePriority(taskId, priority);
         }
+        //Broadcast changes
         try {
             SseEmitter sseEmitter = new SseEmitter();
             sseService.addEmitter(sseEmitter);
@@ -168,6 +178,7 @@ public class TaskService {
         }
     }
 
+    //Adding description for task
     @Transactional
     public void setDesc(Long taskId, String description) {
         Optional<Task> task = taskRepository.findById(taskId);
@@ -182,6 +193,7 @@ public class TaskService {
             query.executeUpdate();
             entityManager.clear();
         }
+        //Emit changes
         try {
             SseEmitter sseEmitter = new SseEmitter();
             sseService.addEmitter(sseEmitter);
@@ -192,6 +204,7 @@ public class TaskService {
         }
     }
 
+    //Setting and assigning deadline for task
     @Transactional
     public void setDeadline(Long taskId, LocalDate deadline) {
         Optional<Task> task = taskRepository.findById(taskId);
@@ -207,6 +220,7 @@ public class TaskService {
             entityManager.clear();
         }
         try {
+            //Emit changes
             SseEmitter sseEmitter = new SseEmitter();
             sseService.addEmitter(sseEmitter);
             sseService.doNotify("setDeadline");

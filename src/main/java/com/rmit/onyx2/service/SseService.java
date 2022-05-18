@@ -1,11 +1,9 @@
 package com.rmit.onyx2.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -32,6 +30,7 @@ public class SseService {
         emitters.remove(emitter);
     }
 
+    //Notify where emitters receive something to return
     @Async
     public void doNotify(String message) {
         List<SseEmitter> deadEmitters = new ArrayList<>();
@@ -44,7 +43,8 @@ public class SseService {
         });
         emitters.removeAll(deadEmitters);
     }
-
+    
+    //Notify where emitters receive something to return
     @Async
     public void doNotifyDashboard(String message) {
         List<SseEmitter> deadEmitters = new ArrayList<>();

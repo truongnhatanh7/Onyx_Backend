@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//WorkspaceList Data Transfer Object (DTO Patterns)
 public class WorkspaceListDTO {
     private Long listId;
     private String name;

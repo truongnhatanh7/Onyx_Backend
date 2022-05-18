@@ -60,18 +60,23 @@ public class UserService {
         return new UserDTO(userRepository.findById(tempId).get());
     }
 
+
     public ResponseEntity<User> addWorkspaceForUserById(Long workspaceId, Long userId) {
+        //Retrieving workspace
         Optional<User> user = userRepository.findById(userId);
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
         if (user.isPresent() && workspace.isPresent()) {
             for (User u : workspace.get().getUsers()) {
+                //If user is workspace owner
                 if (Objects.equals(u.getUserId(), user.get().getUserId())) {
                     return ResponseEntity.badRequest().build();
                 }
             }
+            //Normal user
             user.get().getWorkspaces().add(workspace.get());
             userRepository.save(user.get());
             try {
+                //Braod cast change event
                 SseEmitter sseEmitter = new SseEmitter();
                 sseService.addEmitter(sseEmitter);
                 sseService.doNotifyDashboard("addWorkspaceForUserById");
@@ -135,6 +140,7 @@ public class UserService {
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
         Optional<User> user = userRepository.findById(userId);
         if (workspace.isPresent() && user.isPresent()) {
+            //Modify the workspace list and user list in both workspaceRepository and userRepository.
             workspace.get().getUsers().remove(user.get());
             user.get().getWorkspaces().remove(workspace.get());
             workspaceRepository.save(workspace.get());
@@ -150,6 +156,7 @@ public class UserService {
         }
     }
 
+    //Updating account functionalities
     public void editPassword(Long userId, String newPassword) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {

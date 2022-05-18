@@ -29,6 +29,7 @@ public class User {
     @Column(name = "avatarURL")
     private String avatarURL = "";
 
+    //User belong to many workspaces
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
         name = "users_workspaces",
@@ -43,6 +44,7 @@ public class User {
     @ToString.Exclude
     private List<Workspace> workspaces = new ArrayList<>();
 
+    //Helper method
     public void addWorkspace(Workspace workspace) {
         this.workspaces.add(workspace);
         workspace.getUsers().add(this);

@@ -26,11 +26,13 @@ public class Workspace {
     @Column(name = "owner_id")
     private Long ownerId;
 
+    //User can have alot of workspace, workspace can have many collaborator
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "workspaces", fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<User> users = new HashSet<>();
 
+    //Workspace list can only belong to one user
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

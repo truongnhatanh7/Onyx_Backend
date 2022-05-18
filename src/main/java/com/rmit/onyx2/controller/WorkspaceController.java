@@ -23,11 +23,14 @@ public class WorkspaceController {
 
     private final WorkspaceService workspaceService;
 
+    //Injecting WorkspaceService dependency to Workspace Controller
     @Autowired
     public WorkspaceController(WorkspaceService workspaceService) {
         this.workspaceService = workspaceService;
     }
 
+    //Work space CRUD methods
+    //Read
     @GetMapping
     public List<WorkspaceDTO> getAllWorkspaces() {
         return workspaceService.getAllWorkspaces();
@@ -43,30 +46,36 @@ public class WorkspaceController {
         return workspaceService.getWorkspacesByUserId(userId);
     }
 
+    //Add
     @PostMapping
     public WorkspaceDTO addWorkspace(@RequestBody Workspace workspace) {
         return workspaceService.addWorkspace(workspace);
     }
 
+    //Update
     @PutMapping("")
     public ResponseEntity<Workspace> editWorkspace(@RequestBody Workspace workspace) {
         return workspaceService.editWorkspace(workspace);
     }
 
+    //Delete
+    @DeleteMapping("/delete-workspace/{workspaceId}")
+    public void deleteWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId) {
+        workspaceService.deleteWorkspaceById(workspaceId);
+    }
+
+    //Need a controller to transfer owner of the wirkspace
     @PatchMapping("/edit-owner/{workspaceId}/{userId}")
     public void editOwner(@PathVariable(name = "workspaceId") Long workspaceId,@PathVariable(name = "userId") Long userId) {
         workspaceService.editOwner(workspaceId, userId);
     }
 
+    //Need a method to get owner id of workspace based on workspace Id
     @GetMapping("/get-owner/{workspaceId}")
     public Long getOwnerId(@PathVariable(name = "workspaceId") Long workspaceId) {
         return workspaceService.getOwnerId(workspaceId);
     }
 
-    @DeleteMapping("/delete-workspace/{workspaceId}")
-    public void deleteWorkspaceById(@PathVariable(name = "workspaceId") Long workspaceId) {
-        workspaceService.deleteWorkspaceById(workspaceId);
-    }
 
 
 }

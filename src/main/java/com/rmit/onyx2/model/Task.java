@@ -1,15 +1,12 @@
 package com.rmit.onyx2.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
 
-import javax.naming.Name;
 import javax.persistence.*;
-import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
+//Class model for task
 @Entity
 @Data
 @AllArgsConstructor
@@ -35,6 +32,7 @@ public class Task {
     @Column(name = "deadline")
     private LocalDate deadline;
 
+    //Workspace list can have many task
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "list_id", referencedColumnName = "list_id")
     @EqualsAndHashCode.Exclude

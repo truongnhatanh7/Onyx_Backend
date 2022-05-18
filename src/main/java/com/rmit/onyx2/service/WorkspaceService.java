@@ -26,6 +26,7 @@ public class WorkspaceService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    //Constructor injection
     @Autowired
     public WorkspaceService(UserRepository userRepository,
                             WorkspaceRepository workspaceRepository,
@@ -54,6 +55,7 @@ public class WorkspaceService {
     public void deleteWorkspaceById(Long workspaceId) {
         Optional<Workspace> workspace = workspaceRepository.findById(workspaceId);
         if (workspace.isPresent()) {
+            //Retreiving workspace
             for (User user : userRepository.findAll()) {
                 user.getWorkspaces().removeIf(w -> w.getWorkspaceId().equals(workspaceId));
             }
@@ -61,6 +63,7 @@ public class WorkspaceService {
             workspace.get().getUsers().clear();
 
 
+            //Deleting task in Workspacelist and Task
             for (WorkspaceList workspaceList : workspace.get().getWorkspaceLists()) {
                 for (Task task : workspaceList.getTasks()) {
                     taskRepository.deleteById(task.getTaskId());
@@ -68,6 +71,7 @@ public class WorkspaceService {
                 workspaceListRepository.deleteById(workspaceList.getListId());
             }
 
+            //Clear workspacelist
             workspace.get().getWorkspaceLists().clear();
             workspaceRepository.deleteById(workspaceId);
 
@@ -90,6 +94,7 @@ public class WorkspaceService {
     }
 
 
+    //Get list of workspace of one user
     public List<WorkspaceDTO> getWorkspacesByUserId(Long userId) {
         List<WorkspaceDTO> workspaceDTOS = new ArrayList<>();
 
