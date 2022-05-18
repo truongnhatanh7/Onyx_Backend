@@ -17,7 +17,7 @@ Inspired by project management tools (Trello, Jira, etc.) that allow users to or
 ### Dependencies
 * Spring boot
 * Lombok
-* Posgres
+* Postgres
 * Gmail Mail server
 * Cloudinary API
 * Maven
