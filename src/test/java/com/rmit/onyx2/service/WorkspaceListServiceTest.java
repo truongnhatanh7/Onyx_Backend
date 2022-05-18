@@ -7,10 +7,16 @@ import com.rmit.onyx2.model.WorkspaceList;
 import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
+import org.junit.Rule;
 import org.junit.jupiter.api.*;
+import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.annotation.Rollback;
 
@@ -24,7 +30,9 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class WorkspaceListServiceTest {
+public class WorkspaceListServiceTest {
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
     private WorkspaceListRepository workspaceListRepository;
@@ -46,8 +54,8 @@ class WorkspaceListServiceTest {
     private Workspace workspace;
 
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         workspace = new Workspace(1L, "Backend test", null, null, null);
         workspaceList = new WorkspaceList(2L, "Unit testing", workspace, null);
         Task task = new Task(
@@ -79,8 +87,8 @@ class WorkspaceListServiceTest {
         workspace.setUsers(userSet);
     }
 
-    @AfterEach
-    void tearDown() {
+    @After
+    public void tearDown() {
         workspaceRepository.deleteAll();
         workspaceListRepository.deleteAll();
         taskRepository.deleteAll();
@@ -96,7 +104,7 @@ class WorkspaceListServiceTest {
     @Order(4)
     @Rollback(value = false)
     @DisplayName("Should return list of WorkspaceList with exist workspaceId provided")
-    void check_Return_List_When_Workspace_Present() {
+   public void check_Return_List_When_Workspace_Present() {
         given(workspaceRepository.findById(workspace.getWorkspaceId())).willReturn(Optional.of(workspace));
 
         assertEquals(workspace.getWorkspaceLists().size(),
@@ -110,7 +118,7 @@ class WorkspaceListServiceTest {
     @Order(5)
     @Rollback(value = false)
     @DisplayName("Should return null with non-exist workspaceId provided")
-    void check_Return_List_When_Workspace_Is_Not_Present() {
+    public void check_Return_List_When_Workspace_Is_Not_Present() {
         given(workspaceRepository.findById(workspace.getWorkspaceId())).willReturn(Optional.empty());
 
         assertNull(workspaceListService.getWorkspaceListByWorkspaceId(workspace.getWorkspaceId()));
@@ -121,7 +129,7 @@ class WorkspaceListServiceTest {
     @Order(3)
     @Rollback(value = false)
     @DisplayName("Should add WorkspaceList successfully")
-    void test_Add_List_By_WorkspaceId_When_ListRepo_Size_Greater_Than_Zero() {
+    public void test_Add_List_By_WorkspaceId_When_ListRepo_Size_Greater_Than_Zero() {
         given(workspaceRepository.findById(workspace.getWorkspaceId())).willReturn(Optional.of(workspace));
         given(workspaceListRepository.findAll()).willReturn(new ArrayList<>(listSet));
         workspaceListService.addWorkspaceListByWorkspaceId(workspace.getWorkspaceId(), workspaceList);
@@ -132,7 +140,7 @@ class WorkspaceListServiceTest {
     @Test
     @Order(2)
     @DisplayName("Should return null WorkspaceListDTO instance when WorkspaceListRepo does not contains any WorkspaceList")
-    void test_Add_List_By_WorkspaceId_When_ListRepo_Size_Equal_Zero() {
+    public void test_Add_List_By_WorkspaceId_When_ListRepo_Size_Equal_Zero() {
         given(workspaceRepository.findById(workspace.getWorkspaceId())).willReturn(Optional.of(workspace));
         given(workspaceListRepository.findAll()).willReturn(new ArrayList<>());
         workspaceListService.addWorkspaceListByWorkspaceId(workspace.getWorkspaceId(), workspaceList);
@@ -143,7 +151,7 @@ class WorkspaceListServiceTest {
     @Test
     @Order(1)
     @DisplayName("Should return null WorkspaceListDTO when workspace is not exist")
-    void test_Add_List_By_WorkspaceId_Which_Not_Present() {
+    public void test_Add_List_By_WorkspaceId_Which_Not_Present() {
         given(workspaceRepository.findById(workspace.getWorkspaceId())).willReturn(Optional.empty());
         workspaceListService.addWorkspaceListByWorkspaceId(workspace.getWorkspaceId(), workspaceList);
         System.out.println("Test case passed: The provided workspaceId " + workspace.getWorkspaceId() + " does not exist!");
@@ -153,7 +161,7 @@ class WorkspaceListServiceTest {
     @Order(7)
     @Rollback(value = false)
     @DisplayName("Should delete WorkspaceList with given its id")
-    void should_Delete_WorkspaceList_By_Id() {
+    public void should_Delete_WorkspaceList_By_Id() {
         given(workspaceListRepository.findById(workspaceList.getListId())).willReturn(Optional.of(workspaceList));
         workspaceListService.deleteWorkspaceListById(workspaceList.getListId());
         verify(workspaceListRepository).deleteById(workspaceList.getListId());

@@ -5,10 +5,16 @@ import com.rmit.onyx2.repository.TaskRepository;
 import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.repository.WorkspaceListRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
+import org.junit.Rule;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -23,7 +29,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class WorkspaceServiceTest {
+public class WorkspaceServiceTest {
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
     private WorkspaceRepository workspaceRepository;
@@ -42,8 +50,8 @@ class WorkspaceServiceTest {
 
     private Workspace workspace;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         Set<User> userSet = new HashSet<>();
         Set<WorkspaceList> listSet = new HashSet<>();
         List<Workspace> workspaceSet = new ArrayList<>();
@@ -93,8 +101,8 @@ class WorkspaceServiceTest {
         workspaceSet.add(workspace);
     }
 
-    @AfterEach
-    void tearDown() {
+    @After
+    public void tearDown() {
         taskRepository.deleteAll();
         userRepository.deleteAll();
         workspaceRepository.deleteAll();
@@ -103,7 +111,7 @@ class WorkspaceServiceTest {
 
     @Test
     @DisplayName("Should get empty workspaces")
-    void should_Get_Empty_Workspaces() {
+    public void should_Get_Empty_Workspaces() {
         // Given
         List<Workspace> workspaceList = new ArrayList<>(workspaceRepository.findAll());
         List<WorkspaceDTO> expected = new ArrayList<>();
@@ -117,7 +125,7 @@ class WorkspaceServiceTest {
 
     @Test
     @DisplayName("Should get all the workspaces")
-    void should_Get_All_Workspaces() {
+    public void should_Get_All_Workspaces() {
         // Given
         List<Workspace> temp = new ArrayList<>();
         List<WorkspaceDTO> expected = new ArrayList<>();
@@ -137,7 +145,7 @@ class WorkspaceServiceTest {
 
     @Test
     @DisplayName("Should add new workspace to workspace repository")
-    void should_Add_Workspace() {
+    public void should_Add_Workspace() {
         WorkspaceDTO expected = new WorkspaceDTO(workspace);
         when(workspaceRepository.saveAndFlush(workspace)).thenReturn(workspace);
         assertEquals(expected, workspaceService.addWorkspace(workspace));
@@ -147,7 +155,7 @@ class WorkspaceServiceTest {
 
     @Test
     @DisplayName("Should delete the Workspace by its ID")
-    void should_Delete_Workspace_By_Id() {
+    public void should_Delete_Workspace_By_Id() {
         workspaceRepository.save(workspace); // Add a sample workspace to the workspace repos for further being deleted
 
         // Add the list of tasks to the workspace
@@ -175,7 +183,7 @@ class WorkspaceServiceTest {
 
     @Test
     @DisplayName("Should get list of workspaces by user id")
-    void should_Get_Workspaces_By_User_Id() {
+    public void should_Get_Workspaces_By_User_Id() {
         // Given
         List<WorkspaceDTO> expected = new ArrayList<>();
         User testUser = workspace.getUsers().stream().findFirst().get();
@@ -190,7 +198,7 @@ class WorkspaceServiceTest {
 
     @Test
     @DisplayName("Should get workspace by id")
-    void should_Get_Workspace_By_Id() {
+    public void should_Get_Workspace_By_Id() {
         // Given
         given(workspaceRepository.findById(workspace.getWorkspaceId())).willReturn(Optional.of(workspace));
         WorkspaceDTO expected = new WorkspaceDTO(workspace);
@@ -202,7 +210,7 @@ class WorkspaceServiceTest {
 
     @Test
     @DisplayName("Should get no workspace by id")
-    void should_Get_No_Workspace_By_Id() {
+    public void should_Get_No_Workspace_By_Id() {
         // Given
         given(workspaceRepository.findById(workspace.getWorkspaceId())).willReturn(Optional.empty());
 

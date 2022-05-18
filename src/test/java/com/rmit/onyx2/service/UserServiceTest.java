@@ -5,13 +5,19 @@ import com.rmit.onyx2.model.UserDTO;
 import com.rmit.onyx2.model.Workspace;
 import com.rmit.onyx2.repository.UserRepository;
 import com.rmit.onyx2.repository.WorkspaceRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.Rule;
+//import org.junit.jupiter.api.AfterEach;
+//import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
@@ -24,31 +30,34 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest(classes = UserServiceTest.class)
-class UserServiceTest {
-    @Mock
-    UserRepository userRepository;
+public class UserServiceTest {
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
-    WorkspaceRepository workspaceRepository;
+    private UserRepository userRepository;
 
     @Mock
-    WorkspaceService workspaceService;
+    private WorkspaceRepository workspaceRepository;
 
     @Mock
-    SseService sseService;
+    private WorkspaceService workspaceService;
+
+    @Mock
+    private SseService sseService;
 
     @InjectMocks
-    UserService userService;
+    private UserService userService;
 
     // Create sample test data
-    List<Workspace> workspaces;
-    Workspace testWorkspace;
-    Set<User> userSet;
-    User testUser;
+    private List<Workspace> workspaces;
+    private Workspace testWorkspace;
+    private Set<User> userSet;
+    private User testUser;
 
     // Configure sample test data
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         workspaces = new ArrayList<>();
         testWorkspace = new Workspace(
                 4L,
@@ -76,8 +85,8 @@ class UserServiceTest {
         workspaces.add(testWorkspace);
     }
 
-    @AfterEach
-    void tearDown() {
+    @After
+    public void tearDown() {
         userRepository.deleteAll();
         workspaceRepository.deleteAll();
         workspaces.clear();
@@ -88,7 +97,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Get all users successfully")
-    void should_Get_All_Users() {
+    public void should_Get_All_Users() {
         // Given
         List<User> temp = new ArrayList<>();
         List<UserDTO> getResult = new ArrayList<>();
@@ -143,7 +152,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Return UserDTO with newly added User")
-    void should_Add_User_Successfully() {
+    public void should_Add_User_Successfully() {
         // Given
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
 
@@ -169,7 +178,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Return the bad request when workspace is not found in Workspace Repos")
-    void test_Add_Non_Exist_Workspace_For_UserById() {
+    public void test_Add_Non_Exist_Workspace_For_UserById() {
         // Given
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
         given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.empty());
@@ -187,7 +196,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Return the bad request when user is not found in User Repos")
-    void test_Add_Workspace_For_Non_Exist_UserId() {
+    public void test_Add_Workspace_For_Non_Exist_UserId() {
         // Given
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.empty());
         given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.of(testWorkspace));
@@ -205,7 +214,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Return the bad request when the added workspace already connect to the wanted user")
-    void test_Add_Workspace_For_User_When_User_Already_Have_That_Workspace() {
+    public void test_Add_Workspace_For_User_When_User_Already_Have_That_Workspace() {
         // Given
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
         given(workspaceRepository.findById(testWorkspace.getWorkspaceId())).willReturn(Optional.of(testWorkspace));
@@ -223,7 +232,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Return the ok request as adding workspace successfully")
-    void should_Add_Workspace_For_UserById() {
+    public void should_Add_Workspace_For_UserById() {
         // Given
         // Assume User and Workspace has no connection to each other so far
         testUser.getWorkspaces().remove(testWorkspace);
@@ -252,7 +261,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Should delete user by their ID")
-    void should_Delete_User_By_Id() {
+    public void should_Delete_User_By_Id() {
         // Given
         testUser.setWorkspaces(workspaces);
         userRepository.save(testUser);
@@ -269,7 +278,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Get user by their ID successfully")
-    void should_Get_User_By_Exist_Id() {
+    public void should_Get_User_By_Exist_Id() {
         // Given
         userRepository.save(testUser);
 
@@ -294,7 +303,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Get user by their ID unsuccessfully")
-    void test_Get_User_By_Non_Exist_Id() {
+    public void test_Get_User_By_Non_Exist_Id() {
         // Given
         userRepository.save(testUser);
 
@@ -319,7 +328,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Remove User from workspace by their ID")
-    void should_Remove_User_From_Workspace_By_Id() {
+    public void should_Remove_User_From_Workspace_By_Id() {
         // Given
         userRepository.save(testUser);
 
@@ -341,7 +350,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Edit password")
-    void should_Edit_Password_By_UserId() {
+    public void should_Edit_Password_By_UserId() {
         // Give
         // Assume UserRepository return User with given userId
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
@@ -358,7 +367,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Edit username")
-    void should_Edit_Username_By_UserId() {
+    public void should_Edit_Username_By_UserId() {
         // Give
         // Assume UserRepository return User with given userId
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
@@ -375,7 +384,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Edit name")
-    void editName() {
+    public void editName() {
         // Give
         // Assume UserRepository return User with given userId
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
@@ -392,7 +401,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Edit avatar URL")
-    void editAvatarURL() {
+    public void editAvatarURL() {
         // Give
         // Assume UserRepository return User with given userId
         given(userRepository.findById(testUser.getUserId())).willReturn(Optional.of(testUser));
