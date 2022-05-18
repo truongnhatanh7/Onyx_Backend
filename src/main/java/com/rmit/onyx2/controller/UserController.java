@@ -4,7 +4,6 @@ import com.rmit.onyx2.model.User;
 import com.rmit.onyx2.model.UserDTO;
 import com.rmit.onyx2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

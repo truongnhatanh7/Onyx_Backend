@@ -7,10 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 @RestController
 @RequestMapping("/api/v1/sse")
 @CrossOrigin(origins = "*")
@@ -18,9 +14,6 @@ public class SseController {
 
     @Autowired
     SseService service;
-
-    final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
-
     //Need an emitter to track changes im the front end
     @GetMapping("/notification/{workspaceId}")
     public ResponseEntity<SseEmitter> doNotify(@PathVariable(name = "workspaceId") Long workspaceId) {
